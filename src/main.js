@@ -268,12 +268,12 @@ for (let i = 0; i < CARDS_COUNT; i++) {
 const filmsContainer = document.querySelector(`.films-list`);
 render(filmsContainer, createShowMoreBtnTemplate(), `beforeend`);
 
-const topRatedContainer = document.querySelector(`.films-list--extra`).querySelector(`.films-list__container`);
+const topRatedContainer = document.querySelector(`.films-list--extra .films-list__container`);
 for (let i = 0; i < CARDS_COUNT_FOR_OTHER; i++) {
   render(topRatedContainer, createFilmCardTemplate(), `beforeend`);
 }
 
-const topCommentContainer = document.querySelector(`.films-list--extra:nth-of-type(3)`).querySelector(`.films-list__container`);
+const topCommentContainer = document.querySelector(`.films-list--extra:nth-of-type(3) .films-list__container`);
 for (let i = 0; i < CARDS_COUNT_FOR_OTHER; i++) {
   render(topCommentContainer, createFilmCardTemplate(), `beforeend`);
 }
