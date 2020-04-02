@@ -1,7 +1,7 @@
 # Личный проект «Киноман» [![Build status][travis-image]][travis-url]
 
 * Студент: [Вадим Сяткин](https://up.htmlacademy.ru/ecmascript/11/user/1093679).
-* Наставник: `Неизвестно`.
+* Наставник: [Евгений Казаков] (https://htmlacademy.ru/profile/id343981).
 
 ---
 
