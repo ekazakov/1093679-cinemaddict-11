@@ -12,7 +12,7 @@ import {createFilmsContainerTemplate} from "./components/films-container-templat
 import {createFilmCardTemplate} from "./components/film-card-template.js";
 import {createShowMoreBtnTemplate} from "./components/show-more-btn-template.js";
 import {createFilmDetails} from "./components/film-details.js";
-// import {createComentTemplate} from "./components/comment-template.js";
+import {createComentTemplate} from "./components/comment-template.js";
 import {createFooterStatisticsTemplate} from "./components/footer-statistics-template.js";
 
 const render = (container, template, place) => {
@@ -50,9 +50,12 @@ for (let i = 0; i < CARDS_COUNT_FOR_OTHER; i++) {
 
 // ----------------film-details-------------------------------
 render(mainElement, createFilmDetails(FILMS_CARDS_ARR[0]), `beforeend`);
-const filmsDetails = document.querySelector(`.film-details`);
-filmsDetails.classList.add(`visually-hidden`);
-// -----------------------------------------------------------
+// const filmsDetails = document.querySelector(`.film-details`);
+// filmsDetails.classList.add(`visually-hidden`);
+
+// ---------------------comments-list-------------------------------------
+const commentsList = document.querySelector(`.film-details__comments-list`);
+render(commentsList, createComentTemplate(FILMS_CARDS_ARR[1].comments[0]), `beforeend`);
 
 // ---------------------footer-count-movies--------------------
 const footerStatistics = document.querySelector(`.footer__statistics`);
@@ -88,7 +91,7 @@ const deleteShowingCards = () => {
 const setDateSort = () => {
   actuallyCardsArr = FILMS_CARDS_ARR.slice(0, FILMS_CARDS_ARR.length);
   const companare = (a, b) => {
-    return b.yearProduction - a.yearProduction;
+    return b.productionDate - a.productionDate;
   };
   showMoreBtn.classList.remove(`visually-hidden`);
   actuallyCardsArr.sort(companare);

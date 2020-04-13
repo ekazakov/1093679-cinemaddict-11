@@ -2,8 +2,6 @@ const FILMS_CARDS_ARR = [];
 const MAX_CARDS_COUNT = 25;
 const MIN_VALUE_RAITNG = 1;
 const MAX_VALUE_RAITING = 10;
-const MIN_YEAR_PRODUCTION = 1900;
-const MAX_YEAR_PRODUCTION = 2000;
 const MAX_COMMENTS_COUNT = 5;
 const MOVIE_TITLES = [`The Dance of Life`,
   `Sagebrush Trail`,
@@ -46,10 +44,12 @@ const EMOJI_SRC = [`angry`,
   `puke`,
   `sleeping`,
   `smile`];
-const MONTHS = [`January `,
+/* const MONTHS = [`January `,
   `February`,
   `May`,
-  `June`];
+  `June`];*/
+const START_TIME = 946684800000; // `01 January 2000 00:00 UTC`
+const END_TIME = 1586735940000; // `12 aprel 2020 23:59 UTC`
 // ---------------------------------------------------
 const getRandomRaitingMovie = (min, max) => {
   let a = Math.random() * (max - min) + min;
@@ -63,17 +63,40 @@ const getArrayRandElement = (arr) => {
   return arr[rand];
 };
 
+let someTime = new Date(getRandomInteger(START_TIME, END_TIME));
+
+const commentDataTemplate = () => {
+  let comments = {
+    emoji: getArrayRandElement(EMOJI_SRC),
+    commentText: getArrayRandElement(MOVIE_DESCRIPTION),
+    commentAutor: getArrayRandElement(NAMES),
+    commentDate: someTime
+  };
+  return comments;
+};
+
+const generateRandomCommentsArr = () => {
+  let commentsArr = [];
+  let temp = getRandomInteger(MIN_VALUE_RAITNG, MAX_COMMENTS_COUNT);
+  if (temp) {
+    for (let i = 0; i < temp; i++) {
+      commentsArr.push(commentDataTemplate());
+      someTime = new Date(getRandomInteger(START_TIME, END_TIME));
+    }
+  }
+  return commentsArr;
+};
+
 const createDataFilmCard = () => {
   const filmCard = {
     poster: `./images/posters/${getArrayRandElement(MOVIES_POSTERS)}`,
     title: getArrayRandElement(MOVIE_TITLES),
     rating: getRandomRaitingMovie(MIN_VALUE_RAITNG, MAX_VALUE_RAITING),
-    yearProduction: getRandomInteger(MIN_YEAR_PRODUCTION, MAX_YEAR_PRODUCTION),
-    movieLength: `${getRandomInteger(MIN_VALUE_RAITNG, MAX_VALUE_RAITING)}h`,
+    movieLength: someTime,
     genre: getArrayRandElement(MOVIE_GENRE),
     description: getArrayRandElement(MOVIE_DESCRIPTION),
     // ---------------full-description------------------
-    fullYearProduction: `${getRandomInteger(MIN_VALUE_RAITNG, MAX_CARDS_COUNT)} ${getArrayRandElement(MONTHS)} ${getRandomInteger(MIN_YEAR_PRODUCTION, MAX_YEAR_PRODUCTION)}`,
+    productionDate: someTime,
     originalTitle: getArrayRandElement(MOVIE_TITLES),
     director: getArrayRandElement(NAMES),
     screenwriters: getArrayRandElement(NAMES),
@@ -81,13 +104,7 @@ const createDataFilmCard = () => {
     country: getArrayRandElement(COUNTRY),
     ageRating: getArrayRandElement(AGE_RATING),
     commentsNumber: getRandomInteger(MIN_VALUE_RAITNG, MAX_COMMENTS_COUNT),
-    comments: {
-      emoji: getArrayRandElement(EMOJI_SRC),
-      commentText: getArrayRandElement(MOVIE_DESCRIPTION),
-      commentAutor: getArrayRandElement(NAMES),
-      commentDate: ``,
-      deleteBtn: ``
-    }
+    comments: generateRandomCommentsArr()
     // ---------------------------------
   };
   return filmCard;

@@ -121,7 +121,7 @@
   );
 };*/
 export const createFilmDetails = (filmCardData) => {
-  // const {title, rating, originalTitle, director, screenwriters, actors, country, ageRating, commentsNumber, poster} = filmCardData;
+  let options = {month: `long`, year: `numeric`};
   return (
     `<section class="film-details">
       <form class="film-details__inner" action="" method="get">
@@ -163,11 +163,11 @@ export const createFilmDetails = (filmCardData) => {
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Release Date</td>
-                  <td class="film-details__cell">${filmCardData.fullYearProduction}</td>
+                  <td class="film-details__cell">${filmCardData.productionDate.getDay()} ${filmCardData.productionDate.toLocaleDateString(`de-DE`, options)}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Runtime</td>
-                  <td class="film-details__cell">${filmCardData.movieLength}</td>
+                  <td class="film-details__cell">${filmCardData.movieLength.getHours()}h ${filmCardData.movieLength.getMinutes()}m</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Country</td>
