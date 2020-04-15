@@ -3,6 +3,7 @@ const MAX_CARDS_COUNT = 25;
 const MIN_VALUE_RAITNG = 1;
 const MAX_VALUE_RAITING = 10;
 const MAX_COMMENTS_COUNT = 5;
+const MAX_MOVIE_LENGTH = 200;
 const MOVIE_TITLES = [`The Dance of Life`,
   `Sagebrush Trail`,
   `The Man with the Golden Arm`,
@@ -63,14 +64,13 @@ const getArrayRandElement = (arr) => {
   return arr[rand];
 };
 
-let someTime = new Date(getRandomInteger(START_TIME, END_TIME));
 
 const commentDataTemplate = () => {
   let comments = {
     emoji: getArrayRandElement(EMOJI_SRC),
     commentText: getArrayRandElement(MOVIE_DESCRIPTION),
     commentAutor: getArrayRandElement(NAMES),
-    commentDate: someTime
+    commentDate: new Date(getRandomInteger(START_TIME, END_TIME))
   };
   return comments;
 };
@@ -81,22 +81,22 @@ const generateRandomCommentsArr = () => {
   if (temp) {
     for (let i = 0; i < temp; i++) {
       commentsArr.push(commentDataTemplate());
-      someTime = new Date(getRandomInteger(START_TIME, END_TIME));
     }
   }
   return commentsArr;
 };
+
 
 const createDataFilmCard = () => {
   const filmCard = {
     poster: `./images/posters/${getArrayRandElement(MOVIES_POSTERS)}`,
     title: getArrayRandElement(MOVIE_TITLES),
     rating: getRandomRaitingMovie(MIN_VALUE_RAITNG, MAX_VALUE_RAITING),
-    movieLength: someTime,
+    movieLength: getRandomInteger(MIN_VALUE_RAITNG, MAX_MOVIE_LENGTH),
     genre: getArrayRandElement(MOVIE_GENRE),
     description: getArrayRandElement(MOVIE_DESCRIPTION),
     // ---------------full-description------------------
-    productionDate: someTime,
+    productionDate: new Date(getRandomInteger(START_TIME, END_TIME)),
     originalTitle: getArrayRandElement(MOVIE_TITLES),
     director: getArrayRandElement(NAMES),
     screenwriters: getArrayRandElement(NAMES),

@@ -4,16 +4,19 @@ const CARDS_COUNT_FOR_OTHER = 2;
 
 import {FILMS_CARDS_ARR} from "./components/generate-data-film-card.js";
 
-import {createUserRankTemplate} from "./components/user-rank-template.js";
+import {createUserRankHeaderProfileTemplate} from "./components/user-rank-header-profile.js";
 import {createMainNavMenuTemplate} from "./components/main-nav-menu-template.js";
 import {createFiltersTemplate} from "./components/filters-template.js";
-import {createStatisticsTemplate} from "./components/statistics-template.js";
 import {createFilmsContainerTemplate} from "./components/films-container-template.js";
 import {createFilmCardTemplate} from "./components/film-card-template.js";
 import {createShowMoreBtnTemplate} from "./components/show-more-btn-template.js";
 import {createFilmDetails} from "./components/film-details.js";
 import {createComentTemplate} from "./components/comment-template.js";
 import {createFooterStatisticsTemplate} from "./components/footer-statistics-template.js";
+// ----------statistics-module--------------
+// import {createBigUserRankTemplate} from "./components/user-rank-template.js";
+// import {createStatisticsTemplate} from "./components/statistics-template.js";
+// -----------------------------------------
 
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
@@ -23,10 +26,9 @@ const headerElement = document.querySelector(`.header`);
 const mainElement = document.querySelector(`.main`);
 
 
-render(headerElement, createUserRankTemplate(), `beforeend`);
+render(headerElement, createUserRankHeaderProfileTemplate(), `beforeend`);
 render(mainElement, createMainNavMenuTemplate(), `beforeend`);
 render(mainElement, createFiltersTemplate(), `beforeend`);
-render(mainElement, createStatisticsTemplate(), `beforeend`);
 
 render(mainElement, createFilmsContainerTemplate(), `beforeend`);
 
@@ -50,8 +52,8 @@ for (let i = 0; i < CARDS_COUNT_FOR_OTHER; i++) {
 
 // ----------------film-details-------------------------------
 render(mainElement, createFilmDetails(FILMS_CARDS_ARR[0]), `beforeend`);
-// const filmsDetails = document.querySelector(`.film-details`);
-// filmsDetails.classList.add(`visually-hidden`);
+const filmsDetails = document.querySelector(`.film-details`);
+filmsDetails.classList.add(`visually-hidden`);
 
 // ---------------------comments-list-------------------------------------
 const commentsList = document.querySelector(`.film-details__comments-list`);
