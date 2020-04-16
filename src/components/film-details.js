@@ -1,5 +1,6 @@
 import {formatFullDateMovie} from "../util.js";
 import {formatTimeLengthMovie} from "../util.js";
+import {createElement} from "../util.js";
 
 export const createFilmDetails = (filmCardData) => {
   return (
@@ -123,3 +124,25 @@ export const createFilmDetails = (filmCardData) => {
     </section>`
   );
 };
+
+export default class FilmDetails {
+  constructor(filmCardData) {
+    this._filmCardData = filmCardData;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createFilmDetails(this._filmCardData);
+  }
+
+  getElement() {
+    if (this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

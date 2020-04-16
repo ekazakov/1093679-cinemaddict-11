@@ -53,7 +53,7 @@ for (let i = 0; i < CARDS_COUNT_FOR_OTHER; i++) {
 // ----------------film-details-------------------------------
 render(mainElement, createFilmDetails(FILMS_CARDS_ARR[0]), `beforeend`);
 const filmsDetails = document.querySelector(`.film-details`);
-filmsDetails.classList.add(`visually-hidden`);
+// filmsDetails.classList.add(`visually-hidden`);
 
 // ---------------------comments-list-------------------------------------
 const commentsList = document.querySelector(`.film-details__comments-list`);

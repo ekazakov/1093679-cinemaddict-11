@@ -1,5 +1,6 @@
 import {formatShortDateMovie} from "../util.js";
 import {formatTimeLengthMovie} from "../util.js";
+import {createElement} from "../util.js";
 
 export const createFilmCardTemplate = (filmCardData) => {
   const {title, rating, productionDate, movieLength, genre, poster, description, commentsNumber} = filmCardData;
@@ -23,3 +24,25 @@ export const createFilmCardTemplate = (filmCardData) => {
     </article>`
   );
 };
+
+export default class FilmCard {
+  constructor(filmCardData) {
+    this._filmCardData = filmCardData;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createFilmCardTemplate(this._filmCardData);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
