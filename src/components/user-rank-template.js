@@ -1,4 +1,4 @@
-export const createUserRankTemplate = () => {
+export const createBigUserRankTemplate = () => {
   return (
     `<p class="statistic__rank">
       Your rank
