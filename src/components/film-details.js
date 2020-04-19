@@ -21,7 +21,7 @@ export const createFilmDetails = (filmCardData) => {
               <div class="film-details__info-head">
                 <div class="film-details__title-wrap">
                   <h3 class="film-details__title">${filmCardData.title}</h3>
-                  <p class="film-details__title-original">Original: ${filmCardData.title}</p>
+                  <p class="film-details__title-original">Original: ${filmCardData.originalTitle}</p>
                 </div>
 
                 <div class="film-details__rating">
@@ -136,7 +136,7 @@ export default class FilmDetails {
   }
 
   getElement() {
-    if (this._element) {
+    if (!this._element) {
       this._element = createElement(this.getTemplate());
     }
     return this._element;

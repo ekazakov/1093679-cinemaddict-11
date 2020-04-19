@@ -88,6 +88,7 @@ const generateRandomCommentsArr = () => {
 
 
 const createDataFilmCard = () => {
+  let temp = generateRandomCommentsArr();
   const filmCard = {
     poster: `./images/posters/${getArrayRandElement(MOVIES_POSTERS)}`,
     title: getArrayRandElement(MOVIE_TITLES),
@@ -103,8 +104,8 @@ const createDataFilmCard = () => {
     actors: getArrayRandElement(NAMES),
     country: getArrayRandElement(COUNTRY),
     ageRating: getArrayRandElement(AGE_RATING),
-    commentsNumber: getRandomInteger(MIN_VALUE_RAITNG, MAX_COMMENTS_COUNT),
-    comments: generateRandomCommentsArr()
+    comments: temp,
+    commentsNumber: temp.length // getRandomInteger(MIN_VALUE_RAITNG, MAX_COMMENTS_COUNT)
     // ---------------------------------
   };
   return filmCard;

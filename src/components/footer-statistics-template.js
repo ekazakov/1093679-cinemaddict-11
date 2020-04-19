@@ -5,12 +5,13 @@ export const createFooterStatisticsTemplate = (FILMS_CARDS_ARR) => {
 };
 
 export default class FooterStatistics {
-  constructor() {
+  constructor(filmsCardsArr) {
+    this._filmsCardsArr = filmsCardsArr;
     this._element = null;
   }
 
   getTemplate() {
-    return createFooterStatisticsTemplate();
+    return createFooterStatisticsTemplate(this._filmsCardsArr);
   }
 
   getElement() {

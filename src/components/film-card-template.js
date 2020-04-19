@@ -5,7 +5,7 @@ import {createElement} from "../util.js";
 export const createFilmCardTemplate = (filmCardData) => {
   const {title, rating, productionDate, movieLength, genre, poster, description, commentsNumber} = filmCardData;
   return (
-    `<article class="film-card">
+    `<article class="film-card" data-index=${filmCardData.index}>
       <h3 class="film-card__title">${title}</h3>
       <p class="film-card__rating">${rating}</p>
       <p class="film-card__info">
