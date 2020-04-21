@@ -28,3 +28,10 @@ export default class UserRankHeaderProfile {
     this._element = null;
   }
 }
+
+let newElement = document.createElement(`div`);
+// newElement = newElement.insertAdjacentElement = (`beforeend`, createUserRankHeaderProfileTemplate());
+const main = document.querySelector(`main`); console.log(main);
+main.insertAdjacentElement(`beforeend`, newElement);
+
+// main.insertAdjacentHTML = ()

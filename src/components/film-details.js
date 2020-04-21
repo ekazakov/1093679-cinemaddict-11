@@ -3,6 +3,11 @@ import {formatTimeLengthMovie} from "../util.js";
 import {createElement} from "../util.js";
 
 export const createFilmDetails = (filmCardData) => {
+  let temp = filmCardData.genre.slice(0, filmCardData.genre.length);
+  const formatGenres = (arr) => {
+    return arr ? arr.splice(0, 1) : String(` `);
+  };
+
   return (
     `<section class="film-details">
       <form class="film-details__inner" action="" method="get">
@@ -55,11 +60,11 @@ export const createFilmDetails = (filmCardData) => {
                   <td class="film-details__cell">${filmCardData.country}</td>
                 </tr>
                 <tr class="film-details__row">
-                  <td class="film-details__term">Genres</td>
+                  <td class="film-details__term">${temp.length > 1 ? `Genres` : `Genre`}</td>
                   <td class="film-details__cell">
-                    <span class="film-details__genre">${filmCardData.genre}</span>
-                    <span class="film-details__genre">${filmCardData.genre}</span>
-                    <span class="film-details__genre">${filmCardData.genre}</span></td>
+                    <span class="film-details__genre">${formatGenres(temp)}</span>
+                    <span class="film-details__genre">${formatGenres(temp)}</span>
+                    <span class="film-details__genre">${formatGenres(temp)}</span></td>
                 </tr>
               </table>
 

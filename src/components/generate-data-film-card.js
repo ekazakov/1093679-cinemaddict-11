@@ -4,6 +4,7 @@ const MIN_VALUE_RAITNG = 1;
 const MAX_VALUE_RAITING = 10;
 const MAX_COMMENTS_COUNT = 5;
 const MAX_MOVIE_LENGTH = 200;
+const MAX_GENRE_COUNT = 4;
 const MOVIE_TITLES = [`The Dance of Life`,
   `Sagebrush Trail`,
   `The Man with the Golden Arm`,
@@ -45,10 +46,7 @@ const EMOJI_SRC = [`angry`,
   `puke`,
   `sleeping`,
   `smile`];
-/* const MONTHS = [`January `,
-  `February`,
-  `May`,
-  `June`];*/
+
 const START_TIME = 946684800000; // `01 January 2000 00:00 UTC`
 const END_TIME = 1586735940000; // `12 aprel 2020 23:59 UTC`
 // ---------------------------------------------------
@@ -86,6 +84,17 @@ const generateRandomCommentsArr = () => {
   return commentsArr;
 };
 
+const generateRandomGenreArr = () => {
+  let genreArr = [];
+  let temp = getRandomInteger(MIN_VALUE_RAITNG, MAX_GENRE_COUNT);
+  if (temp) {
+    for (let i = 0; i < temp; i++) {
+      genreArr.push(getArrayRandElement(MOVIE_GENRE));
+    }
+  }
+  return genreArr;
+};
+
 
 const createDataFilmCard = () => {
   let temp = generateRandomCommentsArr();
@@ -94,7 +103,7 @@ const createDataFilmCard = () => {
     title: getArrayRandElement(MOVIE_TITLES),
     rating: getRandomRaitingMovie(MIN_VALUE_RAITNG, MAX_VALUE_RAITING),
     movieLength: getRandomInteger(MIN_VALUE_RAITNG, MAX_MOVIE_LENGTH),
-    genre: getArrayRandElement(MOVIE_GENRE),
+    genre: generateRandomGenreArr(),
     description: getArrayRandElement(MOVIE_DESCRIPTION),
     // ---------------full-description------------------
     productionDate: new Date(getRandomInteger(START_TIME, END_TIME)),

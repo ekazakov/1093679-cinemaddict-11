@@ -17,6 +17,7 @@ export const formatFullDateMovie = (dateObj) => {
   return `${dateObj.getDate()} ${MONTH_NAMES[dateObj.getMonth()]} ${dateObj.getFullYear()}`;
 };
 
+
 export const formatTimeLengthMovie = (value) => {
   let hours = 0;
   let minutes = 0;
@@ -40,7 +41,8 @@ export const formatTimeLengthMovie = (value) => {
 
 export const createElement = (template) => {
   const newElement = document.createElement(`div`);
-  newElement.innerHTML = template;
+  // newElement.innerHTML = template;
+  newElement.insertAdjacentHTML(RenderPosition.BEFOREEND, template);
 
   return newElement.firstChild;
 };

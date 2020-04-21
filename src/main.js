@@ -4,19 +4,6 @@ const CARDS_COUNT_FOR_OTHER = 2;
 
 import {FILMS_CARDS_ARR} from "./components/generate-data-film-card.js";
 
-/* import {createUserRankHeaderProfileTemplate} from "./components/user-rank-header-profile.js";
-import {createMainNavMenuTemplate} from "./components/main-nav-menu-template.js";
-import {createFiltersTemplate} from "./components/filters-template.js";
-import {createFilmsContainerTemplate} from "./components/films-container-template.js";
-import {createFilmCardTemplate} from "./components/film-card-template.js";
-import {createShowMoreBtnTemplate} from "./components/show-more-btn-template.js";
-import {createFilmDetails} from "./components/film-details.js";
-import {createComentTemplate} from "./components/comment-template.js";
-import {createFooterStatisticsTemplate} from "./components/footer-statistics-template.js";*/
-// ----------statistics-module--------------
-// import {createBigUserRankTemplate} from "./components/user-rank-template.js";
-// import {createStatisticsTemplate} from "./components/statistics-template.js";
-// -----------------------------------------
 import UserRankHeaderProfileComponent from "./components/user-rank-header-profile.js";
 import MainNavMenuComponent from "./components/main-nav-menu-template.js";
 import FiltersComponent from "./components/filters-template.js";
@@ -60,15 +47,24 @@ for (let i = 0; i < CARDS_COUNT; i++) {
 const filmsContainer = document.querySelector(`.films-list`);
 render(filmsContainer, new ShowMoreBtnComponent().getElement(), RenderPosition.BEFOREEND);
 
-
+// -------------------------Other - Containers -------------------------------
+let cards = FILMS_CARDS_ARR.slice(0, FILMS_CARDS_ARR.length);
+let companareForRatedContainer = (a, b) => {
+  return b.rating - a.rating;
+};
+let companareForCommentsContainer = (a, b) => { // очевидно что здесь дублируется код
+  return b.comments.length - a.comments.length; // пока не понял как исхитриться с сортировкой, что бы передавать в неё ключ обьекта для сортировки по этому ключу.
+};
+cards.sort(companareForRatedContainer);
 const topRatedContainer = document.querySelector(`.films-list--extra .films-list__container`);
 for (let i = 0; i < CARDS_COUNT_FOR_OTHER; i++) {
-  render(topRatedContainer, new FilmCardComponent(FILMS_CARDS_ARR[i]).getElement(), RenderPosition.BEFOREEND);
+  render(topRatedContainer, new FilmCardComponent(cards[i]).getElement(), RenderPosition.BEFOREEND);
 }
 
+cards.sort(companareForCommentsContainer);
 const topCommentContainer = document.querySelector(`.films-list--extra:nth-of-type(3) .films-list__container`);
 for (let i = 0; i < CARDS_COUNT_FOR_OTHER; i++) {
-  render(topCommentContainer, new FilmCardComponent(FILMS_CARDS_ARR[i]).getElement(), RenderPosition.BEFOREEND);
+  render(topCommentContainer, new FilmCardComponent(cards[i]).getElement(), RenderPosition.BEFOREEND);
 }
 
 // ---------------------footer-count-movies--------------------
@@ -86,9 +82,8 @@ const onEscKeyDown = (evt) => {
   }
 };
 
-
-filmsListContainer.addEventListener(`click`, function (evt) {
-  if (evt.target.closest(`IMG`) || evt.target.closest(`A`) || evt.target.closest(`H3`)) {
+mainElement.addEventListener(`click`, function (evt) {
+  if (evt.target.closest(`IMG`) || evt.target.closest(`.film-card__comments`) || evt.target.closest(`H3`)) {
     let uniqueIndex = evt.target.closest(`ARTICLE`).dataset.index;
     render(mainElement, new FilmDetailsComponent(FILMS_CARDS_ARR[uniqueIndex]).getElement(), RenderPosition.BEFOREEND);
 
@@ -102,6 +97,7 @@ filmsListContainer.addEventListener(`click`, function (evt) {
     const filmsDetailsCloseBtn = document.querySelector(`.film-details__close-btn`);
     filmsDetailsCloseBtn.addEventListener(`click`, () => {
       mainElement.removeChild(filmDetails);
+      document.removeEventListener(`keydown`, onEscKeyDown);
     });
   }
 });
@@ -112,12 +108,74 @@ const showMoreBtn = document.querySelector(`.films-list__show-more`);
 showMoreBtn.addEventListener(`click`, () => {
   actuallyCardsArr.splice(0, 5);
   for (let i = 0; i < CARDS_COUNT; i++) {
-    render(filmsListContainer, new FilmCardComponent(FILMS_CARDS_ARR[i]).getElement(), RenderPosition.BEFOREEND);
+    render(filmsListContainer, new FilmCardComponent(actuallyCardsArr[i]).getElement(), RenderPosition.BEFOREEND);
     if (actuallyCardsArr.length === 5) {
       showMoreBtn.classList.add(`visually-hidden`);
     }
   }
 });
+// -------------------------- SORT ---------------------------------------------
+const sort = document.querySelector(`.sort`);
+const defaultSort = document.querySelector(`.sort__button--default`);
+const dateSort = document.querySelector(`.sort__button--date`);
+const ratingSort = document.querySelector(`.sort__button--rating`);
+const ACTIVE_CLASS_FILTER = `sort__button--active`;
+
+const deleteShowingCards = () => {
+  for (let i = 0; i < filmsListContainer.childNodes.length;) {
+    if (filmsListContainer.childNodes[0].nodeName === `ARTICLE`) {
+      filmsListContainer.childNodes[0].remove();
+    }
+  }
+};
+
+const setDateSort = () => {
+  actuallyCardsArr = FILMS_CARDS_ARR.slice(0, FILMS_CARDS_ARR.length);
+  const companare = (a, b) => {
+    return b.productionDate - a.productionDate;
+  };
+  showMoreBtn.classList.remove(`visually-hidden`);
+  actuallyCardsArr.sort(companare);
+  deleteShowingCards();
+  for (let i = 0; i < CARDS_COUNT; i++) {
+    render(filmsListContainer, new FilmCardComponent(actuallyCardsArr[i]).getElement(), RenderPosition.BEFOREEND);
+  }
+};
+
+const setDefaultSort = () => {
+  actuallyCardsArr = FILMS_CARDS_ARR.slice(0, FILMS_CARDS_ARR.length);
+  showMoreBtn.classList.remove(`visually-hidden`);
+  deleteShowingCards();
+  for (let i = 0; i < CARDS_COUNT; i++) {
+    render(filmsListContainer, new FilmCardComponent(actuallyCardsArr[i]).getElement(), RenderPosition.BEFOREEND);
+  }
+};
+
+const setRatingSort = () => {
+  actuallyCardsArr = FILMS_CARDS_ARR.slice(0, FILMS_CARDS_ARR.length);
+  const companare = (a, b) => {
+    return b.rating - a.rating;
+  };
+  showMoreBtn.classList.remove(`visually-hidden`);
+  actuallyCardsArr.sort(companare);
+  deleteShowingCards();
+  for (let i = 0; i < CARDS_COUNT; i++) {
+    render(filmsListContainer, new FilmCardComponent(actuallyCardsArr[i]).getElement(), RenderPosition.BEFOREEND);
+  }
+};
+
+sort.addEventListener(`click`, (evt) =>{
+  if (evt.target.closest(`A`)) {
+    defaultSort.classList.remove(ACTIVE_CLASS_FILTER);
+    dateSort.classList.remove(ACTIVE_CLASS_FILTER);
+    ratingSort.classList.remove(ACTIVE_CLASS_FILTER);
+    evt.target.classList.add(ACTIVE_CLASS_FILTER);
+  }
+});
+
+dateSort.addEventListener(`click`, setDateSort);
+defaultSort.addEventListener(`click`, setDefaultSort);
+ratingSort.addEventListener(`click`, setRatingSort);
 
 
 // render(commentsList, new CommentComponent(FILMS_CARDS_ARR[0].comments[0]).getElement(), RenderPosition.BEFOREEND);
