@@ -37,7 +37,6 @@ export const formatTimeLengthMovie = (value) => {
     return `${hours}h`;
   }
   return `${hours}h ${minutes}m`;
-<<<<<<< HEAD
 };
 
 export const createElement = (template) => {
@@ -56,6 +55,4 @@ export const render = (container, element, place) => {
       container.append(element);
       break;
   }
-=======
->>>>>>> 650deb19338dcd340e30639ec7f2c390db4e3f55
 };
