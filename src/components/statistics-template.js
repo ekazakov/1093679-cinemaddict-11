@@ -1,3 +1,5 @@
+import {createElement} from "../util.js";
+
 export const createStatisticsTemplate = () => {
   return (
     `<form action="https://echo.htmlacademy.ru/" method="get" class="statistic__filters">
@@ -35,3 +37,23 @@ export const createStatisticsTemplate = () => {
     </ul>`
   );
 };
+
+export default class Statistics {
+  constructor() {
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createStatisticsTemplate();
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+  removeElement() {
+    this._element = null;
+  }
+}

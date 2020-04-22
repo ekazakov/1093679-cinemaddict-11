@@ -1,5 +1,6 @@
 import {formatFullDateMovie} from "../util.js";
 import {formatTimeLengthMovie} from "../util.js";
+import {createElement} from "../util.js";
 
 export const createFilmDetails = (filmCardData) => {
   return (
@@ -20,7 +21,7 @@ export const createFilmDetails = (filmCardData) => {
               <div class="film-details__info-head">
                 <div class="film-details__title-wrap">
                   <h3 class="film-details__title">${filmCardData.title}</h3>
-                  <p class="film-details__title-original">Original: ${filmCardData.title}</p>
+                  <p class="film-details__title-original">Original: ${filmCardData.originalTitle}</p>
                 </div>
 
                 <div class="film-details__rating">
@@ -54,11 +55,11 @@ export const createFilmDetails = (filmCardData) => {
                   <td class="film-details__cell">${filmCardData.country}</td>
                 </tr>
                 <tr class="film-details__row">
-                  <td class="film-details__term">Genres</td>
+                  <td class="film-details__term">${filmCardData.genre.length > 1 ? `Genres` : `Genre`}</td>
                   <td class="film-details__cell">
-                    <span class="film-details__genre">${filmCardData.genre}</span>
-                    <span class="film-details__genre">${filmCardData.genre}</span>
-                    <span class="film-details__genre">${filmCardData.genre}</span></td>
+                    <span class="film-details__genre">${filmCardData.genre.join(` `)}</span>
+                    <span class="film-details__genre"></span>
+                    <span class="film-details__genre"></span></td>
                 </tr>
               </table>
 
@@ -123,3 +124,25 @@ export const createFilmDetails = (filmCardData) => {
     </section>`
   );
 };
+
+export default class FilmDetails {
+  constructor(filmCardData) {
+    this._filmCardData = filmCardData;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createFilmDetails(this._filmCardData);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

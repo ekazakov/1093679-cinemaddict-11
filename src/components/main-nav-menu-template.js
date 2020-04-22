@@ -1,3 +1,5 @@
+import {createElement} from "../util.js";
+
 export const createMainNavMenuTemplate = () => {
   return (
     `<nav class="main-navigation">
@@ -11,3 +13,23 @@ export const createMainNavMenuTemplate = () => {
     </nav>`
   );
 };
+
+export default class MainNavMenu {
+  constructor() {
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createMainNavMenuTemplate();
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+  removeElement() {
+    this._element = null;
+  }
+}
