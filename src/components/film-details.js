@@ -1,8 +1,17 @@
 import {formatFullDateMovie} from "../util.js";
 import {formatTimeLengthMovie} from "../util.js";
 import {createElement} from "../util.js";
-
+/*     <span class="film-details__genre">${filmCardData.genre.join(` `)}</span>
+    <span class="film-details__genre"></span>
+    <span class="film-details__genre"></span> */
 export const createFilmDetails = (filmCardData) => {
+  const formatGenre = (genreArr) => {
+    let html = ``;
+    for (let i = 0; i < genreArr.length; i++) {
+      html += `<span class="film-details__genre">${genreArr[i]}</span>`;
+    }
+    return html;
+  };
   return (
     `<section class="film-details">
       <form class="film-details__inner" action="" method="get">
@@ -56,10 +65,7 @@ export const createFilmDetails = (filmCardData) => {
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">${filmCardData.genre.length > 1 ? `Genres` : `Genre`}</td>
-                  <td class="film-details__cell">
-                    <span class="film-details__genre">${filmCardData.genre.join(` `)}</span>
-                    <span class="film-details__genre"></span>
-                    <span class="film-details__genre"></span></td>
+                  <td class="film-details__cell">${formatGenre(filmCardData.genre)}</td>
                 </tr>
               </table>
 

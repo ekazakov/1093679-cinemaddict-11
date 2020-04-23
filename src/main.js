@@ -12,7 +12,7 @@ import ShowMoreBtnComponent from "./components/show-more-btn-template.js";
 import FilmDetailsComponent from "./components/film-details.js";
 import CommentComponent from "./components/comment-template.js";
 import FooterStatisticsComponent from "./components/footer-statistics-template.js";
-
+console.log(FILMS_CARDS_ARR);
 import {render} from "./util.js";
 import {RenderPosition} from "./const.js";
 // ----------statistics-module--------------
