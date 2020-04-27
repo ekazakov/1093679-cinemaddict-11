@@ -1,9 +1,7 @@
-import {formatFullDateMovie} from "../util.js";
-import {formatTimeLengthMovie} from "../util.js";
-import {createElement} from "../util.js";
-/*     <span class="film-details__genre">${filmCardData.genre.join(` `)}</span>
-    <span class="film-details__genre"></span>
-    <span class="film-details__genre"></span> */
+import {formatFullDateMovie} from "../utils/common.js";
+import {formatTimeLengthMovie} from "../utils/common.js";
+import AbstractComponent from "./abstract-component.js";
+
 export const createFilmDetails = (filmCardData) => {
   const formatGenre = (genreArr) => {
     let html = ``;
@@ -131,24 +129,18 @@ export const createFilmDetails = (filmCardData) => {
   );
 };
 
-export default class FilmDetails {
+export default class FilmDetails extends AbstractComponent {
   constructor(filmCardData) {
+    super();
     this._filmCardData = filmCardData;
-    this._element = null;
   }
 
   getTemplate() {
     return createFilmDetails(this._filmCardData);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
+  setCloseFilmDetailsBtnHandler(handler) {
+    this.getElement().querySelector(`.film-details__close-btn`)
+    .addEventListener(`click`, handler);
   }
 }

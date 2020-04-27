@@ -12,6 +12,7 @@ export const MONTH_NAMES = [
   `November`,
   `December`,
 ];
+
 export const VALUE_HOUR = 60;
 export const RenderPosition = {
   AFTERBEGIN: `afterbegin`,

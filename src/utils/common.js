@@ -1,6 +1,5 @@
 import {MONTH_NAMES} from "./const.js";
 import {VALUE_HOUR} from "./const.js";
-import {RenderPosition} from "./const.js";
 
 export const formatCommentDate = (dateObj) => {
   const formatTime = (value) => {
@@ -37,22 +36,4 @@ export const formatTimeLengthMovie = (value) => {
     return `${hours}h`;
   }
   return `${hours}h ${minutes}m`;
-};
-
-export const createElement = (template) => {
-  const newElement = document.createElement(`div`);
-  // newElement.innerHTML = template;
-  newElement.insertAdjacentHTML(RenderPosition.BEFOREEND, template);
-
-  return newElement.firstChild;
-};
-export const render = (container, element, place) => {
-  switch (place) {
-    case RenderPosition.AFTERBEGIN:
-      container.prepend(element);
-      break;
-    case RenderPosition.BEFOREEND:
-      container.append(element);
-      break;
-  }
 };
