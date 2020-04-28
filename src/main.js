@@ -3,8 +3,7 @@ import {FILMS_CARDS_ARR} from "./components/generate-data-film-card.js";
 import UserRankHeaderProfileComponent from "./components/user-rank-header-profile.js";
 import MainNavMenuComponent from "./components/main-nav-menu-template.js";
 import FooterStatisticsComponent from "./components/footer-statistics-template.js";
-import FilmsContainerComponent from "./components/films-container-template.js";
-import PageController from "./controllers/main-board-controller.js";
+import PageController from "./controllers/page-controller.js";
 
 import {render/* , remove, replace*/} from "./utils/render.js";
 import {RenderPosition} from "./utils/const.js";
@@ -30,11 +29,10 @@ const mainElement = document.querySelector(`.main`);
 render(headerElement, new UserRankHeaderProfileComponent(), RenderPosition.BEFOREEND); // static
 render(mainElement, new MainNavMenuComponent(), RenderPosition.BEFOREEND); // static
 
-const filmsContainerComponent = new FilmsContainerComponent();
-const pageControllerComponent = new PageController(filmsContainerComponent);
+const pageControllerComponent = new PageController(FILMS_CARDS_ARR, mainElement);
 
 if (FILMS_CARDS_ARR.length) {
-  pageControllerComponent.render(FILMS_CARDS_ARR);
+  pageControllerComponent.render();
 } else {
   mainElement.insertAdjacentHTML(RenderPosition.BEFOREEND, NO_FILMS);
 }
