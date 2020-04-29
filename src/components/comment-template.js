@@ -1,5 +1,5 @@
-import {formatCommentDate} from "../util.js";
-import {createElement} from "../util.js";
+import {formatCommentDate} from "../utils/common.js";
+import AbstractComponent from "./abstract-component.js";
 
 export const createComentTemplate = (commentData) => {
   return (
@@ -19,24 +19,13 @@ export const createComentTemplate = (commentData) => {
   );
 };
 
-export default class Comment {
+export default class Comment extends AbstractComponent {
   constructor(commentData) {
+    super();
     this._commentData = commentData;
-    this._element = null;
   }
 
   getTemplate() {
     return createComentTemplate(this._commentData);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

@@ -1,11 +1,11 @@
-import {formatShortDateMovie} from "../util.js";
-import {formatTimeLengthMovie} from "../util.js";
-import {createElement} from "../util.js";
+import {formatShortDateMovie} from "../utils/common.js";
+import {formatTimeLengthMovie} from "../utils/common.js";
+import AbstractComponent from "./abstract-component.js";
 
 export const createFilmCardTemplate = (filmCardData) => {
   const {title, rating, productionDate, movieLength, genre, poster, description, commentsNumber} = filmCardData;
   return (
-    `<article class="film-card" data-index=${filmCardData.index}>
+    `<article class="film-card">
       <h3 class="film-card__title">${title}</h3>
       <p class="film-card__rating">${rating}</p>
       <p class="film-card__info">
@@ -25,24 +25,17 @@ export const createFilmCardTemplate = (filmCardData) => {
   );
 };
 
-export default class FilmCard {
+export default class FilmCard extends AbstractComponent {
   constructor(filmCardData) {
+    super();
     this._filmCardData = filmCardData;
-    this._element = null;
   }
 
   getTemplate() {
     return createFilmCardTemplate(this._filmCardData);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
+  setFilmCardClickHandler(handler) {
+    this.getElement().addEventListener(`click`, handler);
   }
 }
