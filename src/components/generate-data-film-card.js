@@ -114,7 +114,11 @@ const createDataFilmCard = () => {
     country: getArrayRandElement(COUNTRY),
     ageRating: getArrayRandElement(AGE_RATING),
     comments: temp,
-    commentsNumber: temp.length // getRandomInteger(MIN_VALUE_RAITNG, MAX_COMMENTS_COUNT)
+    commentsNumber: temp.length, // getRandomInteger(MIN_VALUE_RAITNG, MAX_COMMENTS_COUNT)
+    // ---------------------------------
+    isWatchlist: false,
+    isAlreadyWatched: false,
+    isFavorite: false
     // ---------------------------------
   };
   return filmCard;
