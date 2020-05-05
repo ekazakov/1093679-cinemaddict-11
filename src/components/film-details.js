@@ -147,10 +147,6 @@ export default class FilmDetails extends AbstractSmartComponent {
   recoveryListeners() {
     this.setCloseFilmDetailsBtnHandler(this._submitHandler);
 
-    // this.setBtnAddtoWatchlistHandler(this._submitHandler);
-    // this.setBtnMarkAsWatchedHandler(this._submitHandler);
-    // this.setBtnFavoriteHandler(this._submitHandler);
-
     this.setChangeSmile();
   }
 
@@ -169,21 +165,21 @@ export default class FilmDetails extends AbstractSmartComponent {
     this.getElement().querySelector(`.film-details__control-label--watchlist`)
     .addEventListener(`click`, handler);
 
-    // this._submitHandler = handler;
+    this._submitHandler = handler;
   }
 
   setBtnMarkAsWatchedHandler(handler) {
     this.getElement().querySelector(`.film-details__control-label--watched`)
     .addEventListener(`click`, handler);
 
-    // this._submitHandler = handler;
+    this._submitHandler = handler;
   }
 
   setBtnFavoriteHandler(handler) {
     this.getElement().querySelector(`.film-details__control-label--favorite`)
     .addEventListener(`click`, handler);
 
-    // this._submitHandler = handler;
+    this._submitHandler = handler;
   }
 
   setChangeSmile() {

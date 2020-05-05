@@ -31,7 +31,7 @@ render(mainElement, new MainNavMenuComponent(), RenderPosition.BEFOREEND); // st
 
 const pageControllerComponent = new PageController(FILMS_CARDS_ARR, mainElement);
 
-if (FILMS_CARDS_ARR.length) { console.log(FILMS_CARDS_ARR);
+if (FILMS_CARDS_ARR.length) {
   pageControllerComponent.render();
 } else {
   mainElement.insertAdjacentHTML(RenderPosition.BEFOREEND, NO_FILMS);

@@ -5,11 +5,25 @@ import FilmCardComponent from "../components/film-card-template.js";
 import {RenderPosition} from "../utils/const.js";
 import {render, remove/* , replace*/} from "../utils/render.js";
 
+const Mode = {
+  DEFAULT: `default`,
+  EDIT: `edit`,
+};
+
 export default class MovieController {
-  constructor(mainElement, filmCards, onDataChange) {
-    this._mainElement = mainElement; console.log(mainElement);
+  constructor(mainElement, filmCards, onDataChange, onViewChange) {
+    this._mainElement = mainElement;
     this._filmCards = filmCards;
     this._onDataChange = onDataChange;
+    this._onViewChange = onViewChange;
+    this._mode = Mode.DEFAULT;
+  }
+
+  setDefaultView() {
+    if (this._mode === Mode.EDIT) {
+      remove(this._filmDetailsComponent);
+      this._mode = Mode.DEFAULT;
+    }
   }
   // ------------------------------render-film-card-------------------------
   renderFilmCard(place, filmCard) {
@@ -28,7 +42,8 @@ export default class MovieController {
     this._filmCardComponent.setFilmCardClickHandler((evt) => {
       if (evt.target.closest(`IMG`) || evt.target.closest(`A`) || evt.target.closest(`H3`)) {
         render(this._mainElement, this._filmDetailsComponent, RenderPosition.BEFOREEND);
-
+        this._onViewChange();
+        this._mode = Mode.EDIT;
         const commentsList = document.querySelector(`.film-details__comments-list`);
         filmCard.comments.forEach((comment) => {
           render(commentsList, new CommentComponent(comment), RenderPosition.BEFOREEND);
@@ -36,6 +51,7 @@ export default class MovieController {
 
         this._filmDetailsComponent.setCloseFilmDetailsBtnHandler(() => {
           remove(this._filmDetailsComponent);
+          this._mode = Mode.DEFAULT;
         });
 
         this._filmDetailsComponent.setBtnAddtoWatchlistHandler(() => {
@@ -43,10 +59,20 @@ export default class MovieController {
             isWatchlist: !filmCard.isWatchlist,
           }));
         });
-        this._filmDetailsComponent.setChangeSmile(); // ?
-        // this._filmDetailsComponent.setBtnMarkAsWatchedHandler()
 
-        // this._filmDetailsComponent.setBtnFavoriteHandler()
+        this._filmDetailsComponent.setBtnMarkAsWatchedHandler(() => {
+          this._onDataChange(this, filmCard, Object.assign({}, filmCard, {
+            isAlreadyWatched: !filmCard.isAlreadyWatched,
+          }));
+        });
+
+        this._filmDetailsComponent.setBtnFavoriteHandler(() =>{
+          this._onDataChange(this, filmCard, Object.assign({}, filmCard, {
+            isFavorite: !filmCard.isFavorite,
+          }));
+        });
+
+        this._filmDetailsComponent.setChangeSmile();
         document.addEventListener(`keydown`, onEscKeyDown);
       }
     });
