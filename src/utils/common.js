@@ -1,19 +1,23 @@
-import {MONTH_NAMES} from "./const.js";
 import {VALUE_HOUR} from "./const.js";
 
+import moment from "moment";
+
 export const formatCommentDate = (dateObj) => {
-  const formatTime = (value) => {
+  /* const formatTime = (value) => {
     return value < 10 ? `0${value}` : String(value);
   };
-  return `${dateObj.getFullYear()}/${dateObj.getMonth() + 1}/${dateObj.getDate()} ${formatTime(dateObj.getHours())}:${formatTime(dateObj.getMinutes())}`;
+  return `${dateObj.getFullYear()}/${dateObj.getMonth() + 1}/${dateObj.getDate()} ${formatTime(dateObj.getHours())}:${formatTime(dateObj.getMinutes())}`;*/
+  return `${moment(dateObj).fromNow()}`;
 };
 
 export const formatShortDateMovie = (dateObj) => {
-  return `${dateObj.getFullYear()}`;
+  // return `${dateObj.getFullYear()}`;
+  return `${moment(dateObj).format(`yyyy`)}`;
 };
 
 export const formatFullDateMovie = (dateObj) => {
-  return `${dateObj.getDate()} ${MONTH_NAMES[dateObj.getMonth()]} ${dateObj.getFullYear()}`;
+  // return `${dateObj.getDate()} ${MONTH_NAMES[dateObj.getMonth()]} ${dateObj.getFullYear()}`;
+  return `${moment(dateObj).format(`d MMMM yyyy`)}`;
 };
 
 

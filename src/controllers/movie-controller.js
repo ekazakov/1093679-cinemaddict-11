@@ -3,7 +3,7 @@ import FilmDetailsComponent from "../components/film-details.js";
 import CommentComponent from "../components/comment-template.js";
 import FilmCardComponent from "../components/film-card-template.js";
 import {RenderPosition} from "../utils/const.js";
-import {render, remove/* , replace*/} from "../utils/render.js";
+import {render, remove, replace} from "../utils/render.js";
 
 const Mode = {
   DEFAULT: `default`,
@@ -16,6 +16,8 @@ export default class MovieController {
     this._filmCards = filmCards;
     this._onDataChange = onDataChange;
     this._onViewChange = onViewChange;
+    this._filmCardComponent = null;
+    this._filmDetailsComponent = null;
     this._mode = Mode.DEFAULT;
   }
 
@@ -26,7 +28,10 @@ export default class MovieController {
     }
   }
   // ------------------------------render-film-card-------------------------
-  renderFilmCard(place, filmCard) {
+  render(place, filmCard) {
+    const filmCardComponent = this._filmCardComponent;
+    const filmDetailsComponent = this._filmDetailsComponent;
+
     this._filmCardComponent = new FilmCardComponent(filmCard);
     this._filmDetailsComponent = new FilmDetailsComponent(filmCard);
 
@@ -44,9 +49,9 @@ export default class MovieController {
         render(this._mainElement, this._filmDetailsComponent, RenderPosition.BEFOREEND);
         this._onViewChange();
         this._mode = Mode.EDIT;
-        const commentsList = document.querySelector(`.film-details__comments-list`);
+        // const commentsList = document.querySelector(`.film-details__comments-list`);
         filmCard.comments.forEach((comment) => {
-          render(commentsList, new CommentComponent(comment), RenderPosition.BEFOREEND);
+          render(this._filmDetailsComponent.getCommentsList(), new CommentComponent(comment), RenderPosition.BEFOREEND);
         });
 
         this._filmDetailsComponent.setCloseFilmDetailsBtnHandler(() => {
@@ -98,6 +103,13 @@ export default class MovieController {
       }));
     });
     // -------------------------------------------------------------------------
-    render(place, this._filmCardComponent, RenderPosition.BEFOREEND);
+    // render(place, this._filmCardComponent, RenderPosition.BEFOREEND);
+    if (filmCardComponent && filmDetailsComponent) {
+      replace(this._filmCardComponent, filmCardComponent);
+      replace(this._filmDetailsComponent, filmDetailsComponent);
+
+    } else {
+      render(place, this._filmCardComponent, RenderPosition.BEFOREEND);
+    }
   }
 }

@@ -38,7 +38,7 @@ const getSortFilmCards = (filmCards, sortType, start, end) => {
 const renderFilmCards = (containerForCards, container, actuallyCardsArr, _onDataChange, _onViewChange) => {
   return actuallyCardsArr.map((filmCard) => {
     const movieController = new MovieController(container, actuallyCardsArr, _onDataChange, _onViewChange);
-    movieController.renderFilmCard(containerForCards, filmCard);
+    movieController.render(containerForCards, filmCard);
 
     return movieController;
   });
@@ -68,7 +68,7 @@ export default class PageController {
 
     this._filmCards = [].concat(this._filmCards.slice(0, index), newData, this._filmCards.slice(index + 1));
 
-    movieController.renderFilmCard(this._filmsListContainer, this._filmCards[index]);
+    movieController.render(this._filmsListContainer, this._filmCards[index]);
   }
 
   /* renderFilmCards(actuallyCardsArr) {
