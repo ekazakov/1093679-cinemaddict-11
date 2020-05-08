@@ -150,6 +150,10 @@ export default class FilmDetails extends AbstractSmartComponent {
   recoveryListeners() {
     this.setCloseFilmDetailsBtnHandler(this._submitHandler);
 
+    this.setBtnAddtoWatchlistHandler(this._submitHandlerForBtnOne);
+    this.setBtnMarkAsWatchedHandler(this._submitHandlerForBtntwo);
+    this.setBtnFavoriteHandler(this._submitHandlerForBtnthree);
+
     this.setChangeSmile();
   }
 

@@ -24,6 +24,7 @@ export default class MovieController {
   setDefaultView() {
     if (this._mode === Mode.EDIT) {
       remove(this._filmDetailsComponent);
+      this._filmDetailsComponent();
       this._mode = Mode.DEFAULT;
     }
   }
@@ -49,38 +50,40 @@ export default class MovieController {
         render(this._mainElement, this._filmDetailsComponent, RenderPosition.BEFOREEND);
         this._onViewChange();
         this._mode = Mode.EDIT;
-        // const commentsList = document.querySelector(`.film-details__comments-list`);
+
         filmCard.comments.forEach((comment) => {
           render(this._filmDetailsComponent.getCommentsList(), new CommentComponent(comment), RenderPosition.BEFOREEND);
         });
-
-        this._filmDetailsComponent.setCloseFilmDetailsBtnHandler(() => {
-          remove(this._filmDetailsComponent);
-          this._mode = Mode.DEFAULT;
-        });
-
-        this._filmDetailsComponent.setBtnAddtoWatchlistHandler(() => {
-          this._onDataChange(this, filmCard, Object.assign({}, filmCard, {
-            isWatchlist: !filmCard.isWatchlist,
-          }));
-        });
-
-        this._filmDetailsComponent.setBtnMarkAsWatchedHandler(() => {
-          this._onDataChange(this, filmCard, Object.assign({}, filmCard, {
-            isAlreadyWatched: !filmCard.isAlreadyWatched,
-          }));
-        });
-
-        this._filmDetailsComponent.setBtnFavoriteHandler(() =>{
-          this._onDataChange(this, filmCard, Object.assign({}, filmCard, {
-            isFavorite: !filmCard.isFavorite,
-          }));
-        });
-
-        this._filmDetailsComponent.setChangeSmile();
-        document.addEventListener(`keydown`, onEscKeyDown);
       }
     });
+
+    this._filmDetailsComponent.setCloseFilmDetailsBtnHandler(() => {
+      remove(this._filmDetailsComponent);
+      this._filmDetailsComponent.rerender();
+      this._mode = Mode.DEFAULT;
+    });
+
+    this._filmDetailsComponent.setBtnAddtoWatchlistHandler(() => {
+      this._onDataChange(this, filmCard, Object.assign({}, filmCard, {
+        isWatchlist: !filmCard.isWatchlist,
+      }));
+    });
+
+    this._filmDetailsComponent.setBtnMarkAsWatchedHandler(() => {
+      this._onDataChange(this, filmCard, Object.assign({}, filmCard, {
+        isAlreadyWatched: !filmCard.isAlreadyWatched,
+      }));
+    });
+
+    this._filmDetailsComponent.setBtnFavoriteHandler(() =>{
+      this._onDataChange(this, filmCard, Object.assign({}, filmCard, {
+        isFavorite: !filmCard.isFavorite,
+      }));
+    });
+
+    this._filmDetailsComponent.setChangeSmile();
+    document.addEventListener(`keydown`, onEscKeyDown);
+
     // ----------------------------------//---------------------------------------
     this._filmCardComponent.setBtnAddtoWatchlistHandler((evt) => {
       evt.preventDefault();
