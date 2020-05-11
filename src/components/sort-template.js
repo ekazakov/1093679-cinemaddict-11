@@ -3,9 +3,8 @@ import AbstractSmartComponent from "./abstract-smart-component.js";
 import {SortType} from "../utils/const.js";
 
 const activeButtonClass = `sort__button--active`;
-let sortType = SortType.DEFAULT;
 
-export const createSortTemplate = () => {
+export const createSortTemplate = (sortType) => {
   return (
     `<ul class="sort">
       <li><a href="#" data-sort-type="${SortType.DEFAULT}" class="sort__button sort__button--default ${sortType === SortType.DEFAULT ? activeButtonClass : ``}">Sort by default</a></li>
@@ -20,10 +19,11 @@ export default class Filters extends AbstractSmartComponent {
     super();
     this._currenSortType = SortType.DEFAULT;
     this._handler = null;
+    this._activeSortType = null;
   }
 
   getTemplate() {
-    return createSortTemplate();
+    return createSortTemplate(this._activeSortType);
   }
 
   getSortType() {
@@ -45,15 +45,15 @@ export default class Filters extends AbstractSmartComponent {
       if (evt.target.tagName !== `A`) {
         return;
       }
-      sortType = evt.target.dataset.sortType;
+      this._activeSortType = evt.target.dataset.sortType;
 
-      if (this._currenSortType === sortType) {
+      if (this._currenSortType === this._activeSortType) {
         return;
       } else {
         this.rerender();
       }
 
-      this._currenSortType = sortType;
+      this._currenSortType = this._activeSortType;
 
       handler(this._currenSortType);
     });
