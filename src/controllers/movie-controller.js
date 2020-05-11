@@ -58,8 +58,8 @@ export default class MovieController {
         this._renderComments(filmCard);
         document.addEventListener(`keydown`, onEscKeyDown);
         this._filmDetailsComponent.setChangeSmile(() => {
-          remove(this._filmDetailsComponent);
-          this._filmDetailsComponent.rerender();
+          // remove(this._filmDetailsComponent);
+          // this._filmDetailsComponent.rerender();
           // this._filmDetailsComponent.rerender();
           // render(this._mainElement, this._filmDetailsComponent, RenderPosition.BEFOREEND);
           this._mode = Mode.EDIT;

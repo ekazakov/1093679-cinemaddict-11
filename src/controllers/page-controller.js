@@ -71,11 +71,9 @@ export default class PageController {
     /* if (index === -1) {
       return;
     }*/
-    console.log(oldData);
-    console.log(newData);
+
     // this._filmCards = [].concat(this._filmCardsModel.getFilmCards().slice(0, index), newData, this._filmCards.slice(index + 1));
     if (isSuccess) {
-      console.log(`succes`);
       movieController.render(this._filmsListContainer, newData);
     }
   }

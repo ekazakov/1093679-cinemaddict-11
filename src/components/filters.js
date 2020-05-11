@@ -5,7 +5,7 @@ import {FilterType} from "../utils/const.js";
 
 const activeLinkHtml = `main-navigation__item--active`;
 
-let activeFilter = FilterType.ALL;
+// let activeFilter = FilterType.ALL;
 
 /* const createFilterTemplate = (filter) => {
   const {isChecked, count} = filter;
@@ -25,7 +25,7 @@ export const createFiltersTemplate = () => {
   );
 };*/
 // ${filter.checked ? activeLinkHtml : ``}
-const createFiltersTemplate = (filters) => { // console.log(filters);
+const createFiltersTemplate = (filters, activeFilter) => { // console.log(filters);
   const createFilters = () => {
     let html = ``;
     filters.slice(1, filters.length).forEach((filter) => {
@@ -45,16 +45,16 @@ const createFiltersTemplate = (filters) => { // console.log(filters);
 
 
 export default class Filter extends AbstractSmartComponent {
-  constructor(filters, activeFilterType) {
+  constructor(filters) {
     super();
 
     this._filters = filters;
-    this._activeFilter = activeFilterType;
+    this._activeFilter = FilterType.ALL;
     this._handler = null;
   }
 
   getTemplate() {
-    return createFiltersTemplate(this._filters);
+    return createFiltersTemplate(this._filters, this._activeFilter);
   }
 
   rerender() {
@@ -71,7 +71,7 @@ export default class Filter extends AbstractSmartComponent {
     .addEventListener(`click`, () => {
       // let filterName = evt.target.href.substring(hrefPath.length);
       const filterName = FilterType.ALL;
-      activeFilter = filterName;
+      this._activeFilter = filterName;
       handler(filterName);
       this.rerender();
 
@@ -80,7 +80,7 @@ export default class Filter extends AbstractSmartComponent {
     this.getElement().querySelector(`.main-navigation__item:nth-of-type(2)`)
     .addEventListener(`click`, () => {
       const filterName = FilterType.WATCHLIST;
-      activeFilter = filterName;
+      this._activeFilter = filterName;
       handler(filterName);
       this.rerender();
     });
@@ -88,7 +88,7 @@ export default class Filter extends AbstractSmartComponent {
     this.getElement().querySelector(`.main-navigation__item:nth-of-type(3)`)
     .addEventListener(`click`, () => {
       const filterName = FilterType.HISTORY;
-      activeFilter = filterName;
+      this._activeFilter = filterName;
       handler(filterName);
       this.rerender();
     });
@@ -96,7 +96,7 @@ export default class Filter extends AbstractSmartComponent {
     this.getElement().querySelector(`.main-navigation__item:nth-of-type(4)`)
     .addEventListener(`click`, () => {
       const filterName = FilterType.FAVORITES;
-      activeFilter = filterName;
+      this._activeFilter = filterName;
       handler(filterName);
       this.rerender();
     });
