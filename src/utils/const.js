@@ -1,18 +1,3 @@
-export const MONTH_NAMES = [
-  `January`,
-  `February`,
-  `March`,
-  `April`,
-  `May`,
-  `June`,
-  `July`,
-  `August`,
-  `September`,
-  `October`,
-  `November`,
-  `December`,
-];
-
 export const VALUE_HOUR = 60;
 export const RenderPosition = {
   AFTERBEGIN: `afterbegin`,
@@ -23,4 +8,16 @@ export const SortType = {
   DEFAULT: `default`,
   DATE: `date`,
   RATING: `rating`
+};
+
+export const FilterType = {
+  ALL: `all`,
+  WATCHLIST: `watchlist`,
+  HISTORY: `history`,
+  FAVORITES: `favorites`
+};
+
+export const Mode = {
+  DEFAULT: `default`,
+  EDIT: `edit`,
 };
