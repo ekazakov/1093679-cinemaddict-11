@@ -4,6 +4,7 @@ import {formatTimeLengthMovie} from "../utils/common.js";
 import AbstractSmartComponent from "./abstract-smart-component.js";
 
 let templatePictureSmile = ``;
+const checkedTemplate = `checked`;
 
 export const createFilmDetails = (filmCardData) => {
   const formatGenre = (genreArr) => {
@@ -77,13 +78,13 @@ export const createFilmDetails = (filmCardData) => {
           </div>
 
           <section class="film-details__controls">
-            <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist">
+            <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist" ${filmCardData.isWatchlist ? checkedTemplate : ``}>
             <label for="watchlist" class="film-details__control-label film-details__control-label--watchlist">Add to watchlist</label>
 
-            <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched">
+            <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched" ${filmCardData.isAlreadyWatched ? checkedTemplate : ``}>
             <label for="watched" class="film-details__control-label film-details__control-label--watched">Already watched</label>
 
-            <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite">
+            <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite" ${filmCardData.isFavorite ? checkedTemplate : ``}>
             <label for="favorite" class="film-details__control-label film-details__control-label--favorite">Add to favorites</label>
           </section>
         </div>
@@ -195,7 +196,7 @@ export default class FilmDetails extends AbstractSmartComponent {
     this._submitHandlerForBtnthree = handler;
   }
 
-  setChangeSmile() {
+  /* setChangeSmile() {
     this.getElement().querySelector(`.film-details__emoji-list`)
     .addEventListener(`click`, (evt) => {
       if (evt.target.closest(`INPUT`)) {
@@ -203,5 +204,9 @@ export default class FilmDetails extends AbstractSmartComponent {
         this.rerender();
       }
     });
+  }*/
+  setChangeSmile(handler) {
+    this.getElement().querySelector(`.film-details__emoji-list`)
+    .addEventListener(`click`, handler);
   }
 }

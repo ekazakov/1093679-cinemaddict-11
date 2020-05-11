@@ -1,5 +1,5 @@
 const FILMS_CARDS_ARR = [];
-const MAX_CARDS_COUNT = 25;
+const MAX_CARDS_COUNT = 22;
 const MIN_VALUE_RAITNG = 1;
 const MAX_VALUE_RAITING = 10;
 const MAX_COMMENTS_COUNT = 5;
@@ -99,6 +99,7 @@ const generateRandomGenreArr = () => {
 const createDataFilmCard = () => {
   let temp = generateRandomCommentsArr();
   const filmCard = {
+    id: String(new Date() + Math.random()),
     poster: `./images/posters/${getArrayRandElement(MOVIES_POSTERS)}`,
     title: getArrayRandElement(MOVIE_TITLES),
     rating: getRandomRaitingMovie(MIN_VALUE_RAITNG, MAX_VALUE_RAITING),
@@ -114,11 +115,11 @@ const createDataFilmCard = () => {
     country: getArrayRandElement(COUNTRY),
     ageRating: getArrayRandElement(AGE_RATING),
     comments: temp,
-    commentsNumber: temp.length, // getRandomInteger(MIN_VALUE_RAITNG, MAX_COMMENTS_COUNT)
+    commentsNumber: temp.length,
     // ---------------------------------
-    isWatchlist: false,
-    isAlreadyWatched: false,
-    isFavorite: false
+    isWatchlist: getRandomInteger(0, 100) > 50 ? true : false,
+    isAlreadyWatched: getRandomInteger(0, 100) > 50 ? true : false,
+    isFavorite: getRandomInteger(0, 100) > 50 ? true : false
     // ---------------------------------
   };
   return filmCard;

@@ -2,13 +2,9 @@
 import FilmDetailsComponent from "../components/film-details.js";
 import CommentComponent from "../components/comment-template.js";
 import FilmCardComponent from "../components/film-card-template.js";
-import {RenderPosition} from "../utils/const.js";
+import {RenderPosition, Mode} from "../utils/const.js";
 import {render, remove, replace} from "../utils/render.js";
 
-const Mode = {
-  DEFAULT: `default`,
-  EDIT: `edit`,
-};
 
 export default class MovieController {
   constructor(mainElement, filmCards, onDataChange, onViewChange) {
@@ -24,9 +20,13 @@ export default class MovieController {
   setDefaultView() {
     if (this._mode === Mode.EDIT) {
       remove(this._filmDetailsComponent);
-      this._filmDetailsComponent();
       this._mode = Mode.DEFAULT;
     }
+  }
+  _renderComments(filmCard) {
+    filmCard.comments.forEach((comment) => {
+      render(this._filmDetailsComponent.getCommentsList(), new CommentComponent(comment), RenderPosition.BEFOREEND);
+    });
   }
   // ------------------------------render-film-card-------------------------
   render(place, filmCard) {
@@ -41,6 +41,7 @@ export default class MovieController {
 
       if (isEscKey) {
         remove(this._filmDetailsComponent);
+        this._mode = Mode.DEFAULT;
         document.removeEventListener(`keydown`, onEscKeyDown);
       }
     };
@@ -51,8 +52,18 @@ export default class MovieController {
         this._onViewChange();
         this._mode = Mode.EDIT;
 
-        filmCard.comments.forEach((comment) => {
+        /* filmCard.comments.forEach((comment) => {
           render(this._filmDetailsComponent.getCommentsList(), new CommentComponent(comment), RenderPosition.BEFOREEND);
+        });*/
+        this._renderComments(filmCard);
+        document.addEventListener(`keydown`, onEscKeyDown);
+        this._filmDetailsComponent.setChangeSmile(() => {
+          remove(this._filmDetailsComponent);
+          this._filmDetailsComponent.rerender();
+          // this._filmDetailsComponent.rerender();
+          // render(this._mainElement, this._filmDetailsComponent, RenderPosition.BEFOREEND);
+          this._mode = Mode.EDIT;
+          this._renderComments(filmCard);
         });
       }
     });
@@ -81,8 +92,14 @@ export default class MovieController {
       }));
     });
 
-    this._filmDetailsComponent.setChangeSmile();
-    document.addEventListener(`keydown`, onEscKeyDown);
+    /* this._filmDetailsComponent.setChangeSmile(() => {
+      remove(this._filmDetailsComponent);
+      // this._filmDetailsComponent.rerender();
+      render(this._mainElement, this._filmDetailsComponent, RenderPosition.BEFOREEND);
+      this._mode = Mode.EDIT;
+      this._renderComments(filmCard);
+    });*/
+    // document.addEventListener(`keydown`, onEscKeyDown);
 
     // ----------------------------------//---------------------------------------
     this._filmCardComponent.setBtnAddtoWatchlistHandler((evt) => {
@@ -110,6 +127,7 @@ export default class MovieController {
     if (filmCardComponent && filmDetailsComponent) {
       replace(this._filmCardComponent, filmCardComponent);
       replace(this._filmDetailsComponent, filmDetailsComponent);
+      this._renderComments(filmCard);
 
     } else {
       render(place, this._filmCardComponent, RenderPosition.BEFOREEND);
