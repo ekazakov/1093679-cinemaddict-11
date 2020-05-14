@@ -31,14 +31,14 @@ const mainElement = document.querySelector(`.main`);
 
 const filmCardsModel = new FilmCardsModel();
 filmCardsModel.setFilmCards(FILMS_CARDS_ARR);
-
+console.log(FILMS_CARDS_ARR);
 render(headerElement, new UserRankHeaderProfileComponent(), RenderPosition.BEFOREEND);
 
 const filterController = new FilterController(mainElement, filmCardsModel);
 filterController.render();
 
 const pageControllerComponent = new PageController(filmCardsModel, mainElement);
-console.log(FILMS_CARDS_ARR);
+
 if (FILMS_CARDS_ARR.length) {
   pageControllerComponent.render();
 } else {

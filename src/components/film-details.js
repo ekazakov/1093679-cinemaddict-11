@@ -3,7 +3,6 @@ import {formatTimeLengthMovie} from "../utils/common.js";
 // import AbstractComponent from "./abstract-component.js";
 import AbstractSmartComponent from "./abstract-smart-component.js";
 
-// let templatePictureSmile = ``;
 const checkedTemplate = `checked`;
 
 export const createFilmDetails = (filmCardData, templatePictureSmile) => {
@@ -132,21 +131,31 @@ export const createFilmDetails = (filmCardData, templatePictureSmile) => {
   );
 };
 
+const parseFromData = (formData, smile) => {
+  const commenText = formData.get(`comment`);
+  return {
+    textComment: commenText,
+    emoji: smile,
+    commentDate: new Date()
+  };
+};
 
 export default class FilmDetails extends AbstractSmartComponent {
   constructor(filmCardData) {
     super();
     this._filmCardData = filmCardData;
 
-    this._submitHandler = null;
+    this._closeHandler = null;
     this._submitHandlerForBtnOne = null;
     this._submitHandlerForBtntwo = null;
     this._submitHandlerForBtnthree = null;
 
     this._smileHandler = null;
-    this._subscribeOnEvents = this._subscribeOnEvents;
     this._subscribeOnEvents();
     this._templatePictureSmile = ``;
+
+    this._submitHandler = null;
+    this._setSubmitForm();
   }
 
   getTemplate() {
@@ -154,13 +163,14 @@ export default class FilmDetails extends AbstractSmartComponent {
   }
 
   recoveryListeners() {
-    this.setCloseFilmDetailsBtnHandler(this._submitHandler);
+    this.setCloseFilmDetailsBtnHandler(this._closeHandler);
 
     this.setBtnAddtoWatchlistHandler(this._submitHandlerForBtnOne);
     this.setBtnMarkAsWatchedHandler(this._submitHandlerForBtntwo);
     this.setBtnFavoriteHandler(this._submitHandlerForBtnthree);
 
     this._subscribeOnEvents();
+    this._setSubmitForm();
   }
 
   rerender() {
@@ -175,7 +185,7 @@ export default class FilmDetails extends AbstractSmartComponent {
     this.getElement().querySelector(`.film-details__close-btn`)
     .addEventListener(`click`, handler);
 
-    this._submitHandler = handler;
+    this._closeHandler = handler;
   }
 
 
@@ -201,19 +211,6 @@ export default class FilmDetails extends AbstractSmartComponent {
     this._submitHandlerForBtnthree = handler;
   }
 
-  /* setChangeSmile() {
-    this.getElement().querySelector(`.film-details__emoji-list`)
-    .addEventListener(`click`, (evt) => {
-      if (evt.target.closest(`INPUT`)) {
-        templatePictureSmile = `<img src="images/emoji/${evt.target.value}.png" width="55" height="55" alt="emoji-${evt.target.value}">`;
-        this.rerender();
-      }
-    });
-  }*/
-  /* setChangeSmile(handler) {
-    this.getElement().querySelector(`.film-details__emoji-list`)
-    .addEventListener(`click`, handler);
-  }*/
   _subscribeOnEvents() {
     this.getElement().querySelector(`.film-details__emoji-list`)
     .addEventListener(`click`, (evt) => {
@@ -228,4 +225,27 @@ export default class FilmDetails extends AbstractSmartComponent {
   setChangeSmile(handler) {
     this._smileHandler = handler;
   }
+
+  getData() {
+    const form = this.getElement().querySelector(`.film-details__inner`);
+    const formData = new FormData(form);
+
+    return parseFromData(formData, this._templatePictureSmile);
+  }
+
+  _setSubmitForm() {
+    this.getElement().querySelector(`form`)
+    .addEventListener(`keydown`, (evt) => {
+      if (evt.key === `Enter`) {
+        console.log(`enter`);
+        this._submitHandler();
+        // this.getElement().querySelector(`form`).submit();
+      }
+    });
+  }
+  _setForm(handler) {
+    this._submitHandler = handler;
+  }
+
+
 }

@@ -15,6 +15,8 @@ export default class MovieController {
     this._filmCardComponent = null;
     this._filmDetailsComponent = null;
     this._mode = Mode.DEFAULT;
+    this._onEscKeyDown = this._onEscKeyDown.bind(this);
+    this._comments = [];
   }
 
   setDefaultView() {
@@ -25,8 +27,26 @@ export default class MovieController {
   }
   _renderComments(filmCard) {
     filmCard.comments.forEach((comment) => {
-      render(this._filmDetailsComponent.getCommentsList(), new CommentComponent(comment), RenderPosition.BEFOREEND);
+      let commentComponent = new CommentComponent(comment);
+      this._comments.push(commentComponent);
+      render(this._filmDetailsComponent.getCommentsList(), commentComponent, RenderPosition.BEFOREEND);
     });
+  }
+
+  destroy() {
+    remove(this._filmCardComponent);
+    remove(this._filmDetailsComponent);
+    document.removeEventListener(`keydown`, this._onEscKeyDown);
+  }
+
+  _onEscKeyDown(evt) {
+    const isEscKey = evt.key === `Escape` || evt.key === `Esc`;
+
+    if (isEscKey) {
+      remove(this._filmDetailsComponent);
+      this._mode = Mode.DEFAULT;
+      document.removeEventListener(`keydown`, this._onEscKeyDown);
+    }
   }
   // ------------------------------render-film-card-------------------------
   render(place, filmCard) {
@@ -36,15 +56,6 @@ export default class MovieController {
     this._filmCardComponent = new FilmCardComponent(filmCard);
     this._filmDetailsComponent = new FilmDetailsComponent(filmCard);
 
-    const onEscKeyDown = (evt) => {
-      const isEscKey = evt.key === `Escape` || evt.key === `Esc`;
-
-      if (isEscKey) {
-        remove(this._filmDetailsComponent);
-        this._mode = Mode.DEFAULT;
-        document.removeEventListener(`keydown`, onEscKeyDown);
-      }
-    };
 
     this._filmCardComponent.setFilmCardClickHandler((evt) => {
       if (evt.target.closest(`IMG`) || evt.target.closest(`A`) || evt.target.closest(`H3`)) {
@@ -52,20 +63,32 @@ export default class MovieController {
         this._onViewChange();
         this._mode = Mode.EDIT;
 
-        /* filmCard.comments.forEach((comment) => {
-          render(this._filmDetailsComponent.getCommentsList(), new CommentComponent(comment), RenderPosition.BEFOREEND);
-        });*/
         this._renderComments(filmCard);
-        document.addEventListener(`keydown`, onEscKeyDown);
-        this._filmDetailsComponent.setChangeSmile(() => {
-          // remove(this._filmDetailsComponent);
-          // this._filmDetailsComponent.rerender();
-          // this._filmDetailsComponent.rerender();
-          // render(this._mainElement, this._filmDetailsComponent, RenderPosition.BEFOREEND);
-          this._mode = Mode.EDIT;
-          this._renderComments(filmCard);
+        document.addEventListener(`keydown`, this._onEscKeyDown);
+
+        this._comments.forEach((commentComponent) => {
+          commentComponent.setDeleteHandler(() => {
+            this._onDataChange(this, filmCard, null, commentComponent);
+            console.log(commentComponent.getElement());
+          });
         });
       }
+    });
+
+    // this._filmDetailsComponent.setChangeForm(() => {
+      // this._filmDetailsComponent._setSubmitForm();
+      this._filmDetailsComponent._setForm(() =>{
+        console.log(`asdasd`);
+        let a = this._filmDetailsComponent.getData();
+        console.log(a);
+        console.log(`yes`);
+        this._onDataChange(this, filmCard, null, a);
+      });
+
+
+    this._filmDetailsComponent.setChangeSmile(() => {
+      this._mode = Mode.EDIT;
+      this._renderComments(filmCard);
     });
 
     this._filmDetailsComponent.setCloseFilmDetailsBtnHandler(() => {
@@ -92,15 +115,6 @@ export default class MovieController {
       }));
     });
 
-    /* this._filmDetailsComponent.setChangeSmile(() => {
-      remove(this._filmDetailsComponent);
-      // this._filmDetailsComponent.rerender();
-      render(this._mainElement, this._filmDetailsComponent, RenderPosition.BEFOREEND);
-      this._mode = Mode.EDIT;
-      this._renderComments(filmCard);
-    });*/
-    // document.addEventListener(`keydown`, onEscKeyDown);
-
     // ----------------------------------//---------------------------------------
     this._filmCardComponent.setBtnAddtoWatchlistHandler((evt) => {
       evt.preventDefault();
@@ -123,11 +137,16 @@ export default class MovieController {
       }));
     });
     // -------------------------------------------------------------------------
-    // render(place, this._filmCardComponent, RenderPosition.BEFOREEND);
     if (filmCardComponent && filmDetailsComponent) {
       replace(this._filmCardComponent, filmCardComponent);
       replace(this._filmDetailsComponent, filmDetailsComponent);
       this._renderComments(filmCard);
+
+      this._comments.forEach((commentComponent) => {
+        commentComponent.setDeleteHandler(() => {
+          this._onDataChange(this, filmCard, null, commentComponent);
+        });
+      });
 
     } else {
       render(place, this._filmCardComponent, RenderPosition.BEFOREEND);

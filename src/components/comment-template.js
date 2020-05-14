@@ -12,7 +12,7 @@ export const createComentTemplate = (commentData) => {
         <p class="film-details__comment-info">
           <span class="film-details__comment-author">${commentData.commentAutor}</span>
           <span class="film-details__comment-day">${formatCommentDate(commentData.commentDate)}</span>
-          <button class="film-details__comment-delete">Delete</button>
+          <button class="film-details__comment-delete" type="button">Delete</button>
         </p>
       </div>
     </li>`
@@ -27,5 +27,13 @@ export default class Comment extends AbstractComponent {
 
   getTemplate() {
     return createComentTemplate(this._commentData);
+  }
+  remove() {
+    super.removeElement();
+  }
+
+  setDeleteHandler(handler) {
+    this.getElement().querySelector(`.film-details__comment-delete`)
+    .addEventListener(`click`, handler);
   }
 }

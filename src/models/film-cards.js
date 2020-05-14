@@ -6,7 +6,7 @@ export default class FilmCards {
     this._filmCards = [];
     this._dataChangeHandlers = [];
     this._filterChangeHandlers = [];
-    this._activeFilterType = FilterType.ALL; console.log(this._activeFilterType);
+    this._activeFilterType = FilterType.ALL;
   }
 
 
@@ -15,9 +15,7 @@ export default class FilmCards {
   }
 
   getFilmCards() {
-    let a = getCardsByFilter(this._filmCards, this._activeFilterType); console.log(a);
     return getCardsByFilter(this._filmCards, this._activeFilterType);
-    // return this._filmCards;
   }
 
   setFilmCards(filmCards) {
@@ -42,11 +40,58 @@ export default class FilmCards {
     return true;
   }
 
+  removeComment(filmCard, removableComment) {
+    let index = 0;
+    this._filmCards.forEach((it, indexCard) => {
+      if (it === filmCard) {
+        index = indexCard;
+      }
+    });
+
+    let commentIndex = 0;
+    this._filmCards[index].comments.forEach((comment, indexComment) => {
+      if (comment === removableComment) {
+        commentIndex = indexComment;
+      }
+    });
+
+    if (index === -1 || commentIndex === -1) {
+      return false;
+    }
+
+    this._filmCards[index].commentsNumber -= 1;
+
+    this._filmCards[index].comments = [].concat(this._filmCards[index].comments.slice(0, commentIndex),
+    this._filmCards[index].comments.slice(commentIndex + 1));
+
+    this._callHandlers(this._dataChangeHandlers);
+
+    return true;
+  }
+
+  addComment(filmCard, comment) { // ???
+    let index = 0;
+    this._filmCards.forEach((it, indexCard) => {
+      if (it === filmCard) {
+        index = indexCard;
+      }
+    });
+    if (index === -1) {
+      return false;
+    }
+    this._filmCards[index].commentsNumber += 1;
+
+    this._filmCards[index].comments = [].concat(this._filmCards[index].comments.push(comment));
+    this._callHandlers(this._dataChangeHandlers);
+
+    return true;
+  }
+
   setFilterChangeHandler(handler) {
     this._filterChangeHandlers.push(handler);
   }
 
-  setDataChangeHandler(handler) { console.log(handler);
+  setDataChangeHandler(handler) {
     this._dataChangeHandlers.push(handler);
   }
 
