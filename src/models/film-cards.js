@@ -81,7 +81,9 @@ export default class FilmCards {
     }
     this._filmCards[index].commentsNumber += 1;
 
-    this._filmCards[index].comments = [].concat(this._filmCards[index].comments.push(comment));
+    // this._filmCards[index].comments = [].concat(
+    this._filmCards[index].comments.push(comment);
+    console.log(this._filmCards[index].comments);
     this._callHandlers(this._dataChangeHandlers);
 
     return true;

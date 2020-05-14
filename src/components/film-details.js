@@ -2,6 +2,7 @@ import {formatFullDateMovie} from "../utils/common.js";
 import {formatTimeLengthMovie} from "../utils/common.js";
 // import AbstractComponent from "./abstract-component.js";
 import AbstractSmartComponent from "./abstract-smart-component.js";
+import {encode} from "he";
 
 const checkedTemplate = `checked`;
 
@@ -13,6 +14,16 @@ export const createFilmDetails = (filmCardData, templatePictureSmile) => {
     }
     return html;
   };
+
+  const formatSmile = () => {
+    if (templatePictureSmile) {
+      return `<img src="images/emoji/${templatePictureSmile}.png" width="55" height="55" alt="emoji-${templatePictureSmile}">`;
+    } else {
+      templatePictureSmile = ``;
+      return templatePictureSmile;
+    }
+  };
+
   return (
     `<section class="film-details">
       <form class="film-details__inner" action="" method="get">
@@ -95,7 +106,7 @@ export const createFilmDetails = (filmCardData, templatePictureSmile) => {
             <ul class="film-details__comments-list"></ul>
 
             <div class="film-details__new-comment">
-              <div for="add-emoji" class="film-details__add-emoji-label">${templatePictureSmile ? templatePictureSmile : ``}</div>
+              <div for="add-emoji" class="film-details__add-emoji-label">${formatSmile()}</div>
 
                 <label class="film-details__comment-label">
                   <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
@@ -131,12 +142,13 @@ export const createFilmDetails = (filmCardData, templatePictureSmile) => {
   );
 };
 
-const parseFromData = (formData, smile) => {
+const parseFromData = (formData, activeSmile) => {
   const commenText = formData.get(`comment`);
   return {
-    textComment: commenText,
-    emoji: smile,
-    commentDate: new Date()
+    commentText: encode(commenText),
+    emoji: activeSmile,
+    commentDate: new Date(),
+    commentAutor: null
   };
 };
 
@@ -159,7 +171,7 @@ export default class FilmDetails extends AbstractSmartComponent {
   }
 
   getTemplate() {
-    return createFilmDetails(this._filmCardData, this._templatePictureSmile);
+    return createFilmDetails(this._filmCardData, this._templatePictureSmile, this._activeSmile);
   }
 
   recoveryListeners() {
@@ -215,7 +227,8 @@ export default class FilmDetails extends AbstractSmartComponent {
     this.getElement().querySelector(`.film-details__emoji-list`)
     .addEventListener(`click`, (evt) => {
       if (evt.target.closest(`INPUT`)) {
-        this._templatePictureSmile = `<img src="images/emoji/${evt.target.value}.png" width="55" height="55" alt="emoji-${evt.target.value}">`;
+        // this._templatePictureSmile = `<img src="images/emoji/${evt.target.value}.png" width="55" height="55" alt="emoji-${evt.target.value}">`;
+        this._templatePictureSmile = evt.target.value;
         this.rerender();
         this._smileHandler(); // а как мы смогли вызвать свойство обьекта ?
       }//  Т.е. если круглые скобки инициируют вызов ф-ции, содержимое this.smilehandler может быть вызвано как ф-ция НО и может просто хранить значения ?

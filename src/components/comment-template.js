@@ -2,10 +2,17 @@ import {formatCommentDate} from "../utils/common.js";
 import AbstractComponent from "./abstract-component.js";
 
 export const createComentTemplate = (commentData) => {
+  const formatEmoji = () => {
+    if (commentData.emoji) {
+      return `<img src="./images/emoji/${commentData.emoji}.png" width="55" height="55" alt="emoji-${commentData.emoji}">`;
+    } else {
+      return `<div for="add-emoji" class="film-details__add-emoji-label"></div>`;
+    }
+  };
   return (
     `<li class="film-details__comment">
       <span class="film-details__comment-emoji">
-        <img src="./images/emoji/${commentData.emoji}.png" width="55" height="55" alt="emoji-${commentData.emoji}">
+        ${formatEmoji()}
       </span>
       <div>
         <p class="film-details__comment-text">${commentData.commentText}</p>

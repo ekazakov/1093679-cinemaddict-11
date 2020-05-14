@@ -80,6 +80,7 @@ export default class MovieController {
       this._filmDetailsComponent._setForm(() =>{
         let a = this._filmDetailsComponent.getData();
         console.log(`setform`);
+        console.log(a);
         this._onDataChange(this, filmCard, null, a);
       });
 

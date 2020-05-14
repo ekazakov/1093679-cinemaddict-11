@@ -20,7 +20,6 @@ const NO_FILMS = `<h2 class="films-list__title">There are no movies in our datab
 // import FilmDetailsComponent from "./components/film-details.js";
 // import CommentComponent from "./components/comment-template.js";
 
-
 // ----------statistics-module--------------
 // import BigUserRank from "./components/user-rank-template.js";
 // import Statistics from "./components/statistics-template.js";

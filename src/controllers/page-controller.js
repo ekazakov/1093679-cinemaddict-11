@@ -11,6 +11,7 @@ import {SortType} from "../utils/const.js";
 
 import MovieController from "./movie-controller.js";
 
+
 const getSortFilmCards = (filmCards, sortType, start, end) => {
   let sortedCards = [];
   const showingCards = filmCards.slice();
