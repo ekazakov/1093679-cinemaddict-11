@@ -62,7 +62,7 @@ export default class FilmCards {
     this._filmCards[index].commentsNumber -= 1;
 
     this._filmCards[index].comments = [].concat(this._filmCards[index].comments.slice(0, commentIndex),
-    this._filmCards[index].comments.slice(commentIndex + 1));
+        this._filmCards[index].comments.slice(commentIndex + 1));
 
     this._callHandlers(this._dataChangeHandlers);
 

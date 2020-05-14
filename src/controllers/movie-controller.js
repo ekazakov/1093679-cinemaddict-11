@@ -78,10 +78,8 @@ export default class MovieController {
     // this._filmDetailsComponent.setChangeForm(() => {
       // this._filmDetailsComponent._setSubmitForm();
       this._filmDetailsComponent._setForm(() =>{
-        console.log(`asdasd`);
         let a = this._filmDetailsComponent.getData();
-        console.log(a);
-        console.log(`yes`);
+        console.log(`setform`);
         this._onDataChange(this, filmCard, null, a);
       });
 
