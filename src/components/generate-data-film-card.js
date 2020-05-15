@@ -65,6 +65,7 @@ const getArrayRandElement = (arr) => {
 
 const commentDataTemplate = () => {
   let comments = {
+    id: String(new Date() + Math.random()),
     emoji: getArrayRandElement(EMOJI_SRC),
     commentText: getArrayRandElement(MOVIE_DESCRIPTION),
     commentAutor: getArrayRandElement(NAMES),

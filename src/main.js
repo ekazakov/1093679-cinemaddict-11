@@ -14,11 +14,6 @@ import FilmCardsModel from "./models/film-cards.js";
 
 const NO_FILMS = `<h2 class="films-list__title">There are no movies in our database</h2>`;
 
-// import SortComponent from "./components/sort-template.js";
-// import FilmCardComponent from "./components/film-card-template.js";
-// import ShowMoreBtnComponent from "./components/show-more-btn-template.js";
-// import FilmDetailsComponent from "./components/film-details.js";
-// import CommentComponent from "./components/comment-template.js";
 
 // ----------statistics-module--------------
 // import BigUserRank from "./components/user-rank-template.js";
@@ -45,5 +40,5 @@ if (FILMS_CARDS_ARR.length) {
 }
 
 // ---------------------footer-count-movies--------------------
-const footerStatistics = document.querySelector(`.footer__statistics`);
-render(footerStatistics, new FooterStatisticsComponent(FILMS_CARDS_ARR), RenderPosition.BEFOREEND);
+// const footerStatistics = document.querySelector(`.footer__statistics`);
+// render(footerStatistics, new FooterStatisticsComponent(FILMS_CARDS_ARR), RenderPosition.BEFOREEND);

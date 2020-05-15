@@ -17,11 +17,11 @@ export const createFilmDetails = (filmCardData, templatePictureSmile) => {
 
   const formatSmile = () => {
     if (templatePictureSmile) {
-      return `<img src="images/emoji/${templatePictureSmile}.png" width="55" height="55" alt="emoji-${templatePictureSmile}">`;
+      templatePictureSmile = templatePictureSmile;
     } else {
-      templatePictureSmile = ``;
-      return templatePictureSmile;
+      templatePictureSmile = `smile`;
     }
+    return `<img src="images/emoji/${templatePictureSmile}.png" width="55" height="55" alt="emoji-${templatePictureSmile}">`;
   };
 
   return (
@@ -146,14 +146,14 @@ const parseFromData = (formData, activeSmile) => {
   const commenText = formData.get(`comment`);
   return {
     commentText: encode(commenText),
-    emoji: activeSmile,
+    emoji: activeSmile ? activeSmile : `smile`,
     commentDate: new Date(),
     commentAutor: null
   };
 };
 
 export default class FilmDetails extends AbstractSmartComponent {
-  constructor(filmCardData) {
+  constructor(filmCardData, currentSmile) {
     super();
     this._filmCardData = filmCardData;
 
@@ -164,14 +164,14 @@ export default class FilmDetails extends AbstractSmartComponent {
 
     this._smileHandler = null;
     this._subscribeOnEvents();
-    this._templatePictureSmile = ``;
+    this._templatePictureSmile = currentSmile;
 
     this._submitHandler = null;
     this._setSubmitForm();
   }
 
   getTemplate() {
-    return createFilmDetails(this._filmCardData, this._templatePictureSmile, this._activeSmile);
+    return createFilmDetails(this._filmCardData, this._templatePictureSmile);
   }
 
   recoveryListeners() {
@@ -227,13 +227,13 @@ export default class FilmDetails extends AbstractSmartComponent {
     this.getElement().querySelector(`.film-details__emoji-list`)
     .addEventListener(`click`, (evt) => {
       if (evt.target.closest(`INPUT`)) {
-        // this._templatePictureSmile = `<img src="images/emoji/${evt.target.value}.png" width="55" height="55" alt="emoji-${evt.target.value}">`;
+
         this._templatePictureSmile = evt.target.value;
         this.rerender();
-        this._smileHandler(); // а как мы смогли вызвать свойство обьекта ?
-      }//  Т.е. если круглые скобки инициируют вызов ф-ции, содержимое this.smilehandler может быть вызвано как ф-ция НО и может просто хранить значения ?
-    });// как тогда содержимое из this может выполнится если все описания в другом файле ?
-  } // тоесть там хранится ссылка на конкретный участок кода ? wait... what...
+        this._smileHandler();
+      }
+    });
+  }
 
   setChangeSmile(handler) {
     this._smileHandler = handler;
@@ -249,14 +249,12 @@ export default class FilmDetails extends AbstractSmartComponent {
   _setSubmitForm() {
     this.getElement().querySelector(`form`)
     .addEventListener(`keydown`, (evt) => {
-      if (evt.key === `Enter`) {
-        console.log(`enter`);
+      if (evt.ctrlKey && evt.key === `Enter`) {
         this._submitHandler();
-        // this.getElement().querySelector(`form`).submit();
       }
     });
   }
-  _setForm(handler) {
+  setForm(handler) {
     this._submitHandler = handler;
   }
 

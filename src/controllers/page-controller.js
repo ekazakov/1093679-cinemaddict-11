@@ -71,6 +71,7 @@ export default class PageController {
       movieController.render(this._filmsListContainer, oldData);
     }
     else if (!newData && comment) {
+      console.log(`remove`);
       this._filmCardsModel.removeComment(oldData, comment);
       movieController.render(this._filmsListContainer, oldData);
     }

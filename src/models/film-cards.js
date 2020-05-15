@@ -41,7 +41,19 @@ export default class FilmCards {
   }
 
   removeComment(filmCard, removableComment) {
-    let index = 0;
+    const index = filmCard.comments.findIndex((it) => it.id === removableComment._commentData.id);
+
+    if (index === -1) {
+      return false;
+    }
+
+    filmCard.commentsNumber -= 1;
+    filmCard.comments = [].concat(filmCard.comments.slice(0, index), filmCard.comments.slice(index + 1));
+
+    this._callHandlers(this._dataChangeHandlers);
+
+    return true;
+    /* let index = 0;
     this._filmCards.forEach((it, indexCard) => {
       if (it === filmCard) {
         index = indexCard;
@@ -62,15 +74,15 @@ export default class FilmCards {
     this._filmCards[index].commentsNumber -= 1;
 
     this._filmCards[index].comments = [].concat(this._filmCards[index].comments.slice(0, commentIndex),
-        this._filmCards[index].comments.slice(commentIndex + 1));
+        this._filmCards[index].comments.slice(commentIndex + 1));*/
 
-    this._callHandlers(this._dataChangeHandlers);
+    // this._callHandlers(this._dataChangeHandlers);
 
-    return true;
+    // return true;
   }
 
-  addComment(filmCard, comment) { // ???
-    let index = 0;
+  addComment(filmCard, comment) {
+    /* let index = 0;
     this._filmCards.forEach((it, indexCard) => {
       if (it === filmCard) {
         index = indexCard;
@@ -78,12 +90,14 @@ export default class FilmCards {
     });
     if (index === -1) {
       return false;
-    }
-    this._filmCards[index].commentsNumber += 1;
+    } */
+    // this._filmCards[index].commentsNumber += 1;
+    filmCard.commentsNumber += 1;
 
     // this._filmCards[index].comments = [].concat(
-    this._filmCards[index].comments.push(comment);
-    console.log(this._filmCards[index].comments);
+    // this._filmCards[index].comments.push(comment);
+    filmCard.comments.push(comment);
+    // console.log(this._filmCards[index].comments);
     this._callHandlers(this._dataChangeHandlers);
 
     return true;
