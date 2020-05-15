@@ -4,7 +4,7 @@ const CARDS_COUNT_FOR_OTHER = 2;
 import SortComponent from "../components/sort-template.js";
 import FilmsContainerComponent from "../components/films-container-template.js";
 import ShowMoreBtnComponent from "../components/show-more-btn-template.js";
-
+import AbstractComponent from "../components/abstract-component.js";
 import {RenderPosition} from "../utils/const.js";
 import {render, remove} from "../utils/render.js";
 import {SortType} from "../utils/const.js";
@@ -45,8 +45,9 @@ const renderFilmCards = (containerForCards, container, actuallyCardsArr, _onData
   });
 };
 
-export default class PageController {
+export default class PageController extends AbstractComponent {
   constructor(filmCardsModel, mainElement) {
+    super();
     this._filmCardsModel = filmCardsModel;
     this._mainElement = mainElement;
 
@@ -85,7 +86,9 @@ export default class PageController {
     }
   }
 
-
+  hide() {
+    super.hide(this._mainElement);
+  }
   _onViewChange() {
     this._showedFilmCards.forEach((it) => it.setDefaultView());
   }

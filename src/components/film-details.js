@@ -1,6 +1,5 @@
 import {formatFullDateMovie} from "../utils/common.js";
 import {formatTimeLengthMovie} from "../utils/common.js";
-// import AbstractComponent from "./abstract-component.js";
 import AbstractSmartComponent from "./abstract-smart-component.js";
 import {encode} from "he";
 
@@ -163,8 +162,9 @@ export default class FilmDetails extends AbstractSmartComponent {
     this._submitHandlerForBtnthree = null;
 
     this._smileHandler = null;
-    this._subscribeOnEvents();
     this._templatePictureSmile = currentSmile;
+    this._currentCommentText = ``;
+    this._subscribeOnEvents();
 
     this._submitHandler = null;
     this._setSubmitForm();
@@ -229,14 +229,25 @@ export default class FilmDetails extends AbstractSmartComponent {
       if (evt.target.closest(`INPUT`)) {
 
         this._templatePictureSmile = evt.target.value;
+        this._currentCommentText = this.getData().commentText;
         this.rerender();
-        this._smileHandler();
+        this._smileHandler(this._templatePictureSmile);
+        this._setCurrentText(this._currentCommentText);
       }
     });
   }
 
   setChangeSmile(handler) {
     this._smileHandler = handler;
+  }
+
+  setCurrentSmile(smile) {
+    this._templatePictureSmile = smile;
+  }
+
+  _setCurrentText(text) {
+    this._currentCommentText = text;
+    this.getElement().querySelector(`.film-details__comment-input`).value = `${text}`;
   }
 
   getData() {
@@ -254,6 +265,7 @@ export default class FilmDetails extends AbstractSmartComponent {
       }
     });
   }
+
   setForm(handler) {
     this._submitHandler = handler;
   }

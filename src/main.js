@@ -25,20 +25,21 @@ const mainElement = document.querySelector(`.main`);
 
 const filmCardsModel = new FilmCardsModel();
 filmCardsModel.setFilmCards(FILMS_CARDS_ARR);
-console.log(FILMS_CARDS_ARR);
+
 render(headerElement, new UserRankHeaderProfileComponent(), RenderPosition.BEFOREEND);
 
 const filterController = new FilterController(mainElement, filmCardsModel);
 filterController.render();
 
-const pageControllerComponent = new PageController(filmCardsModel, mainElement);
+const pageController = new PageController(filmCardsModel, mainElement);
 
 if (FILMS_CARDS_ARR.length) {
-  pageControllerComponent.render();
+  pageController.render();
+
 } else {
   mainElement.insertAdjacentHTML(RenderPosition.BEFOREEND, NO_FILMS);
 }
-
+// pageController.hide();
 // ---------------------footer-count-movies--------------------
-// const footerStatistics = document.querySelector(`.footer__statistics`);
-// render(footerStatistics, new FooterStatisticsComponent(FILMS_CARDS_ARR), RenderPosition.BEFOREEND);
+const footerStatistics = document.querySelector(`.footer__statistics`);
+render(footerStatistics, new FooterStatisticsComponent(FILMS_CARDS_ARR), RenderPosition.BEFOREEND);
