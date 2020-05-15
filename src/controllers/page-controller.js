@@ -70,14 +70,12 @@ export default class PageController extends AbstractComponent {
     if (!newData && !comment.getElement) {
       this._filmCardsModel.addComment(oldData, comment);
       movieController.render(this._filmsListContainer, oldData);
-    }
-    else if (!newData && comment) {
-      console.log(`remove`);
+
+    } else if (!newData && comment) {
       this._filmCardsModel.removeComment(oldData, comment);
       movieController.render(this._filmsListContainer, oldData);
-    }
 
-    else if (newData && oldData && !comment) {
+    } else if (newData && oldData && !comment) {
       const isSuccess = this._filmCardsModel.updateFilmCard(oldData.id, newData);
 
       if (isSuccess) {

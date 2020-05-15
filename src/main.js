@@ -39,7 +39,7 @@ if (FILMS_CARDS_ARR.length) {
 } else {
   mainElement.insertAdjacentHTML(RenderPosition.BEFOREEND, NO_FILMS);
 }
-// pageController.hide();
+pageController.hide();
 // ---------------------footer-count-movies--------------------
 const footerStatistics = document.querySelector(`.footer__statistics`);
 render(footerStatistics, new FooterStatisticsComponent(FILMS_CARDS_ARR), RenderPosition.BEFOREEND);
