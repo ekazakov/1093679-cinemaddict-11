@@ -19,7 +19,7 @@ const createFiltersTemplate = (filters, activeFilter) => {
           <a href="#all" class="main-navigation__item ${activeFilter === FilterType.ALL ? activeLinkHtml : ``}">All movies</a>
           ${createFilters()}
         </div>
-        <a href="#stats" class="main-navigation__additional">Stats</a>
+        <a href="#stats" class="main-navigation__additional ${activeFilter === `stats` ? activeLinkHtml : ``}">Stats</a>
       </nav>`;
 };
 
@@ -31,6 +31,7 @@ export default class Filter extends AbstractSmartComponent {
     this._filters = filters;
     this._activeFilter = FilterType.ALL;
     this._handler = null;
+    this.setOnchangeHandler = null;
   }
 
   getTemplate() {
@@ -43,10 +44,12 @@ export default class Filter extends AbstractSmartComponent {
 
   recoveryListeners() {
     this.setClickOnFiltersHandler(this._handler);
+    this.setOnchange(this.setOnchangeHandler);
   }
 
   setClickOnFiltersHandler(handler) {
     this._handler = handler;
+
     this.getElement().querySelector(`.main-navigation__item:nth-of-type(1)`)
     .addEventListener(`click`, () => {
       const filterName = FilterType.ALL;
@@ -78,6 +81,25 @@ export default class Filter extends AbstractSmartComponent {
       this._activeFilter = filterName;
       handler(filterName);
       this.rerender();
+    });
+
+    this.getElement().querySelector(`.main-navigation__additional`)
+    .addEventListener(`click`, () => {
+      const filterName = `stats`;
+      this._activeFilter = filterName;
+      this.rerender();
+    });
+  }
+
+  setOnchange(handler) {
+    this.setOnchangeHandler = handler;
+    this.getElement()
+    .addEventListener(`click`, (evt) => {
+      if (evt.target.tagName === `A`) {
+        const prefixHref = `http://localhost:8080/#`;
+        let menuItem = evt.target.href.substring(prefixHref.length);
+        handler(menuItem);
+      }
     });
   }
 

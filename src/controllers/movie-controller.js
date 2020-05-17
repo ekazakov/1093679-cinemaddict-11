@@ -2,7 +2,7 @@
 import FilmDetailsComponent from "../components/film-details.js";
 import CommentComponent from "../components/comment-template.js";
 import FilmCardComponent from "../components/film-card-template.js";
-import {RenderPosition, Mode} from "../utils/const.js";
+import {RenderPosition, Mode, DEFAULT_SMILE, KEY} from "../utils/const.js";
 import {render, remove, replace} from "../utils/render.js";
 
 
@@ -17,7 +17,7 @@ export default class MovieController {
     this._mode = Mode.DEFAULT;
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
 
-    this._currentSmile = `smile`;
+    this._currentSmile = DEFAULT_SMILE;
     this._currentCommentText = ``;
   }
 
@@ -26,7 +26,7 @@ export default class MovieController {
       remove(this._filmDetailsComponent);
       this._mode = Mode.DEFAULT;
 
-      this._currentSmile = `smile`;
+      this._currentSmile = DEFAULT_SMILE;
       this._filmDetailsComponent.setCurrentSmile(this._currentSmile);
     }
   }
@@ -49,12 +49,13 @@ export default class MovieController {
   }
 
   _onEscKeyDown(evt) {
-    const isEscKey = evt.key === `Escape` || evt.key === `Esc`;
+    const isEscKey = evt.key === KEY.ESC;
 
     if (isEscKey) {
       remove(this._filmDetailsComponent);
       this._mode = Mode.DEFAULT;
-      this._currentSmile = `smile`;
+      this._currentSmile = DEFAULT_SMILE;
+      this._currentCommentText = ``;
       this._filmDetailsComponent.setCurrentSmile(this._currentSmile);
       document.removeEventListener(`keydown`, this._onEscKeyDown);
     }
@@ -65,7 +66,7 @@ export default class MovieController {
     const filmDetailsComponent = this._filmDetailsComponent;
 
     this._filmCardComponent = new FilmCardComponent(filmCard);
-    this._filmDetailsComponent = new FilmDetailsComponent(filmCard, this._currentSmile);
+    this._filmDetailsComponent = new FilmDetailsComponent(filmCard, this._currentSmile, this._currentCommentText);
 
 
     this._filmCardComponent.setFilmCardClickHandler((evt) => {
@@ -81,11 +82,9 @@ export default class MovieController {
       }
     });
 
-
     this._filmDetailsComponent.setForm(() =>{
       this._onDataChange(this, filmCard, null, this._filmDetailsComponent.getData());
     });
-
 
     this._filmDetailsComponent.setChangeSmile((smile) => {
       this._mode = Mode.EDIT;
@@ -94,34 +93,41 @@ export default class MovieController {
       this._renderComments(filmCard);
     });
 
-
     this._filmDetailsComponent.setCloseFilmDetailsBtnHandler(() => {
       remove(this._filmDetailsComponent);
       this._filmDetailsComponent.rerender();
       this._mode = Mode.DEFAULT;
-      this._currentSmile = `smile`;
+      this._currentSmile = DEFAULT_SMILE;
+      this._currentCommentText = ``;
+      this._filmDetailsComponent._setCurrentText(``);
       this._filmDetailsComponent.setCurrentSmile(this._currentSmile);
     });
 
     this._filmDetailsComponent.setBtnAddtoWatchlistHandler(() => {
+      this._currentCommentText = this._filmDetailsComponent.getData().commentText;
+
       this._onDataChange(this, filmCard, Object.assign({}, filmCard, {
         isWatchlist: !filmCard.isWatchlist,
       }));
     });
 
     this._filmDetailsComponent.setBtnMarkAsWatchedHandler(() => {
+      this._currentCommentText = this._filmDetailsComponent.getData().commentText;
+
       this._onDataChange(this, filmCard, Object.assign({}, filmCard, {
-        isAlreadyWatched: !filmCard.isAlreadyWatched,
+        isAlreadyWatched: !filmCard.isAlreadyWatched, watchingDate: !filmCard.isAlreadyWatched ? new Date() : null
       }));
     });
 
-    this._filmDetailsComponent.setBtnFavoriteHandler(() =>{
+    this._filmDetailsComponent.setBtnFavoriteHandler(() => {
+      this._currentCommentText = this._filmDetailsComponent.getData().commentText;
+
       this._onDataChange(this, filmCard, Object.assign({}, filmCard, {
         isFavorite: !filmCard.isFavorite,
       }));
     });
 
-    // ----------------------------------//---------------------------------------
+
     this._filmCardComponent.setBtnAddtoWatchlistHandler((evt) => {
       evt.preventDefault();
       this._onDataChange(this, filmCard, Object.assign({}, filmCard, {
@@ -132,7 +138,7 @@ export default class MovieController {
     this._filmCardComponent.setBtnMarkAsWatchedHandler((evt) => {
       evt.preventDefault();
       this._onDataChange(this, filmCard, Object.assign({}, filmCard, {
-        isAlreadyWatched: !filmCard.isAlreadyWatched,
+        isAlreadyWatched: !filmCard.isAlreadyWatched, watchingDate: !filmCard.isAlreadyWatched ? new Date() : null
       }));
     });
 
@@ -142,7 +148,7 @@ export default class MovieController {
         isFavorite: !filmCard.isFavorite,
       }));
     });
-    // -------------------------------------------------------------------------
+
     if (filmCardComponent && filmDetailsComponent) {
       replace(this._filmCardComponent, filmCardComponent);
       replace(this._filmDetailsComponent, filmDetailsComponent);

@@ -1,11 +1,11 @@
 import {formatFullDateMovie} from "../utils/common.js";
 import {formatTimeLengthMovie} from "../utils/common.js";
+import {KEY} from "../utils/const.js";
 import AbstractSmartComponent from "./abstract-smart-component.js";
 import {encode} from "he";
 
-const checkedTemplate = `checked`;
 
-export const createFilmDetails = (filmCardData, templatePictureSmile) => {
+export const createFilmDetails = (filmCardData, templatePictureSmile, commentText) => {
   const formatGenre = (genreArr) => {
     let html = ``;
     for (let i = 0; i < genreArr.length; i++) {
@@ -87,13 +87,13 @@ export const createFilmDetails = (filmCardData, templatePictureSmile) => {
           </div>
 
           <section class="film-details__controls">
-            <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist" ${filmCardData.isWatchlist ? checkedTemplate : ``}>
+            <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist" ${filmCardData.isWatchlist ? `checked` : ``}>
             <label for="watchlist" class="film-details__control-label film-details__control-label--watchlist">Add to watchlist</label>
 
-            <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched" ${filmCardData.isAlreadyWatched ? checkedTemplate : ``}>
+            <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched" ${filmCardData.isAlreadyWatched ? `checked` : ``}>
             <label for="watched" class="film-details__control-label film-details__control-label--watched">Already watched</label>
 
-            <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite" ${filmCardData.isFavorite ? checkedTemplate : ``}>
+            <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite" ${filmCardData.isFavorite ? `checked` : ``}>
             <label for="favorite" class="film-details__control-label film-details__control-label--favorite">Add to favorites</label>
           </section>
         </div>
@@ -108,7 +108,7 @@ export const createFilmDetails = (filmCardData, templatePictureSmile) => {
               <div for="add-emoji" class="film-details__add-emoji-label">${formatSmile()}</div>
 
                 <label class="film-details__comment-label">
-                  <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
+                  <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">${commentText}</textarea>
                 </label>
 
                 <div class="film-details__emoji-list">
@@ -152,7 +152,7 @@ const parseFromData = (formData, activeSmile) => {
 };
 
 export default class FilmDetails extends AbstractSmartComponent {
-  constructor(filmCardData, currentSmile) {
+  constructor(filmCardData, currentSmile, commentText) {
     super();
     this._filmCardData = filmCardData;
 
@@ -163,7 +163,7 @@ export default class FilmDetails extends AbstractSmartComponent {
 
     this._smileHandler = null;
     this._templatePictureSmile = currentSmile;
-    this._currentCommentText = ``;
+    this._currentCommentText = commentText;
     this._subscribeOnEvents();
 
     this._submitHandler = null;
@@ -171,7 +171,7 @@ export default class FilmDetails extends AbstractSmartComponent {
   }
 
   getTemplate() {
-    return createFilmDetails(this._filmCardData, this._templatePictureSmile);
+    return createFilmDetails(this._filmCardData, this._templatePictureSmile, this._currentCommentText);
   }
 
   recoveryListeners() {
@@ -260,7 +260,7 @@ export default class FilmDetails extends AbstractSmartComponent {
   _setSubmitForm() {
     this.getElement().querySelector(`form`)
     .addEventListener(`keydown`, (evt) => {
-      if (evt.ctrlKey && evt.key === `Enter`) {
+      if (evt.ctrlKey && evt.key === KEY.ENTER) {
         this._submitHandler();
       }
     });

@@ -36,7 +36,7 @@ export default class FilmCards {
     }
     this._filmCards = [].concat(this._filmCards.slice(0, index), filmCard, this._filmCards.slice(index + 1));
     this._callHandlers(this._dataChangeHandlers);
-
+    console.log(this._filmCards);
     return true;
   }
 
@@ -53,51 +53,13 @@ export default class FilmCards {
     this._callHandlers(this._dataChangeHandlers);
 
     return true;
-    /* let index = 0;
-    this._filmCards.forEach((it, indexCard) => {
-      if (it === filmCard) {
-        index = indexCard;
-      }
-    });
-
-    let commentIndex = 0;
-    this._filmCards[index].comments.forEach((comment, indexComment) => {
-      if (comment === removableComment) {
-        commentIndex = indexComment;
-      }
-    });
-
-    if (index === -1 || commentIndex === -1) {
-      return false;
-    }
-
-    this._filmCards[index].commentsNumber -= 1;
-
-    this._filmCards[index].comments = [].concat(this._filmCards[index].comments.slice(0, commentIndex),
-        this._filmCards[index].comments.slice(commentIndex + 1));*/
-
-    // this._callHandlers(this._dataChangeHandlers);
-
-    // return true;
   }
 
   addComment(filmCard, comment) {
-    /* let index = 0;
-    this._filmCards.forEach((it, indexCard) => {
-      if (it === filmCard) {
-        index = indexCard;
-      }
-    });
-    if (index === -1) {
-      return false;
-    } */
-    // this._filmCards[index].commentsNumber += 1;
     filmCard.commentsNumber += 1;
 
-    // this._filmCards[index].comments = [].concat(
-    // this._filmCards[index].comments.push(comment);
     filmCard.comments.push(comment);
-    // console.log(this._filmCards[index].comments);
+
     this._callHandlers(this._dataChangeHandlers);
 
     return true;

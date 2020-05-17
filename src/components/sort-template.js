@@ -19,7 +19,7 @@ export default class Filters extends AbstractSmartComponent {
     super();
     this._currenSortType = SortType.DEFAULT;
     this._handler = null;
-    this._activeSortType = null;
+    this._activeSortType = SortType.DEFAULT;
   }
 
   getTemplate() {
@@ -36,6 +36,12 @@ export default class Filters extends AbstractSmartComponent {
 
   recoveryListeners() {
     this.setSortTypeChangeHandler(this._handler);
+  }
+
+  setSortType(sortType) {
+    this._activeSortType = sortType;
+    this._currenSortType = sortType;
+    this.rerender();
   }
 
   setSortTypeChangeHandler(handler) {
@@ -56,6 +62,7 @@ export default class Filters extends AbstractSmartComponent {
       this._currenSortType = this._activeSortType;
 
       handler(this._currenSortType);
+
     });
   }
 }

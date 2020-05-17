@@ -16,7 +16,6 @@ export default class FilterController {
     this._onDataChange = this._onDataChange.bind(this);
     this._onFilterChange = this._onFilterChange.bind(this);
 
-    // this._filmCardModel = `?`;
     this._filmCardsModel.setDataChangeHandler(this._onDataChange);
   }
 
@@ -28,14 +27,12 @@ export default class FilterController {
       return {
         name: filterType,
         count: getCardsByFilter(filmCardsAll, filterType).length,
-        // checked: filterType // === this._activeFilterType
       };
     });
+
     const oldComponent = this._filterComponent;
-    // console.log(filters);
     this._filterComponent = new FilterComponent(filters, this._activeFilterType);
     this._filterComponent.setClickOnFiltersHandler(this._onFilterChange);
-
 
     if (oldComponent) {
       replace(this._filterComponent, oldComponent);
@@ -50,5 +47,9 @@ export default class FilterController {
   }
   _onDataChange() {
     this.render();
+  }
+
+  setOnchange(handler) {
+    this._filterComponent.setOnchange(handler);
   }
 }

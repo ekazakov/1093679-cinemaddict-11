@@ -22,10 +22,11 @@ const MOVIE_DESCRIPTION = [`Lorem ipsum dolor sit amet, consectetur adipiscing e
   `Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus.`,
   `Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.`];
 const MOVIE_GENRE = [`Musical`,
-  `Western`,
-  `Drama`,
+  `Sci-Fi`,
+  `Animation`,
+  `Fantasy`,
   `Comedy`,
-  `Cartoon`];
+  `TV Series`];
 // ---------------------------------------------------
 const COUNTRY = [`USA`,
   `Canada`,
@@ -47,7 +48,7 @@ const EMOJI_SRC = [`angry`,
   `sleeping`,
   `smile`];
 
-const START_TIME = 946684800000; // `01 January 2000 00:00 UTC`
+const START_TIME = 1547010000000; // `10 January 2019 00:00 UTC`
 const END_TIME = 1586735940000; // `12 aprel 2020 23:59 UTC`
 // ---------------------------------------------------
 const getRandomRaitingMovie = (min, max) => {
@@ -99,6 +100,7 @@ const generateRandomGenreArr = () => {
 
 const createDataFilmCard = () => {
   let temp = generateRandomCommentsArr();
+  let isWatched = getRandomInteger(0, 100) > 50 ? true : false;
   const filmCard = {
     id: String(new Date() + Math.random()),
     poster: `./images/posters/${getArrayRandElement(MOVIES_POSTERS)}`,
@@ -119,8 +121,10 @@ const createDataFilmCard = () => {
     commentsNumber: temp.length,
     // ---------------------------------
     isWatchlist: getRandomInteger(0, 100) > 50 ? true : false,
-    isAlreadyWatched: getRandomInteger(0, 100) > 50 ? true : false,
-    isFavorite: getRandomInteger(0, 100) > 50 ? true : false
+    isAlreadyWatched: isWatched,
+    isFavorite: getRandomInteger(0, 100) > 50 ? true : false,
+    // ---------------------------------
+    watchingDate: isWatched ? new Date(getRandomInteger(START_TIME, END_TIME)) : null
     // ---------------------------------
   };
   return filmCard;
