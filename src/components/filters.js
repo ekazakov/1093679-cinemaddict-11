@@ -25,11 +25,11 @@ const createFiltersTemplate = (filters, activeFilter) => {
 
 
 export default class Filter extends AbstractSmartComponent {
-  constructor(filters) {
+  constructor(filters, activeFilter = FilterType.ALL) {
     super();
 
     this._filters = filters;
-    this._activeFilter = FilterType.ALL;
+    this._activeFilter = activeFilter;
     this._handler = null;
     this.setOnchangeHandler = null;
   }

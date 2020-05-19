@@ -1,6 +1,7 @@
 import AbstractComponent from "./abstract-component.js";
 
 const rangMap = {
+  NO_RANG: ``,
   NOVICE: `Novice`,
   FAN: `Fan`,
   MOVIE_BUFF: `Movie buff`,
@@ -15,6 +16,9 @@ const getWatchedMovies = (filmCards) => {
 
 const getRangUser = (filmCards) => {
   let a = getWatchedMovies(filmCards).length;
+  if (a <= 0) {
+    return rangMap.NO_RANG;
+  }
   if (a <= 10) {
     return rangMap.NOVICE;
   }

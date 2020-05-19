@@ -6,7 +6,7 @@ import {render, /* remove,*/ replace} from "../utils/render.js";
 import {getCardsByFilter} from "../utils/filter-cards.js";
 
 export default class FilterController {
-  constructor(container, filmCardsModel) {
+  constructor(container, filmCardsModel, menuItem) {
     this._container = container;
     this._filmCardsModel = filmCardsModel;
 
@@ -17,6 +17,8 @@ export default class FilterController {
     this._onFilterChange = this._onFilterChange.bind(this);
 
     this._filmCardsModel.setDataChangeHandler(this._onDataChange);
+
+    this._setOnChangeFilterHandler = menuItem;
   }
 
   render() {
@@ -50,6 +52,7 @@ export default class FilterController {
   }
 
   setOnchange(handler) {
-    this._filterComponent.setOnchange(handler);
+    this._setOnChangeFilterHandler = handler;
+    this._filterComponent.setOnchange(this._setOnChangeFilterHandler);
   }
 }

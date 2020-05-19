@@ -45,9 +45,10 @@ export default class Filters extends AbstractSmartComponent {
   }
 
   setSortTypeChangeHandler(handler) {
+    this._handler = handler;
     this.getElement().addEventListener(`click`, (evt) =>{
       evt.preventDefault();
-      this._handler = handler;
+      // this._handler = handler;
       if (evt.target.tagName !== `A`) {
         return;
       }

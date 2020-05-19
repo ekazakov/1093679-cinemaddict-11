@@ -1,17 +1,9 @@
-// import AbstractComponent from "./abstract-component.js";
-import AbstractSmartComponent from "./abstract-smart-component.js";
+/* import AbstractSmartComponent from "./abstract-smart-component.js";
 
 import Chart from "chart.js";
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import {VALUE_HOUR, STATISTICS_MENU} from "../utils/const.js";
 
-// import {render, /* remove,*/ replace} from "../utils/render.js";
-// import StatisticsComponent from "../components/statistics-template.js";
-// const BAR_HEIGHT = 50;
-// const statisticCtx = document.querySelector(`.statistic__chart`);
-
-// Обязательно рассчитайте высоту canvas, она зависит от количества элементов диаграммы
-// statisticCtx.height = BAR_HEIGHT * 5;
 
 const renderChart = (statisticElement, filmCards) => {
 
@@ -83,7 +75,6 @@ const getWatchedMovies = (filmCards) => {
 };
 
 const rangMap = {
-  NO_RANG: ``,
   NOVICE: `Novice`,
   FAN: `Fan`,
   MOVIE_BUFF: `Movie buff`,
@@ -91,9 +82,6 @@ const rangMap = {
 
 const getRangUser = (filmCards) => {
   let a = getWatchedMovies(filmCards).length;
-  if (a <= 0) {
-    return rangMap.NO_RANG;
-  }
   if (a <= 10) {
     return rangMap.NOVICE;
   }
@@ -178,7 +166,7 @@ const getTopGenre = (filmCards) => {
   return genreMap[c];
 };
 
-const getOnPeriodCards = (filmCards, from, to) => {
+ const getOnPeriodCards = (filmCards, from, to) => {
   let a = getWatchedMovies(filmCards);
   let b = [];
   a.forEach((filmCard) => {
@@ -189,7 +177,7 @@ const getOnPeriodCards = (filmCards, from, to) => {
   return b;
 };
 
-export const createStatisticsTemplate = (actuallyFilmCards, filmCards) => {
+export const createStatisticsTemplate = (filmCards) => {
 
   return (
     `<section class="statistic">
@@ -221,15 +209,15 @@ export const createStatisticsTemplate = (actuallyFilmCards, filmCards) => {
         <ul class="statistic__text-list">
           <li class="statistic__text-item">
             <h4 class="statistic__item-title">You watched</h4>
-            <p class="statistic__item-text">${getWatchedMovies(actuallyFilmCards).length} <span class="statistic__item-description">movies</span></p>
+            <p class="statistic__item-text">${getWatchedMovies(filmCards).length} <span class="statistic__item-description">movies</span></p>
           </li>
           <li class="statistic__text-item">
             <h4 class="statistic__item-title">Total duration</h4>
-            <p class="statistic__item-text">${getWatchedMoviesLength(actuallyFilmCards, `hours`)} <span class="statistic__item-description">h</span> ${getWatchedMoviesLength(actuallyFilmCards, `minutes`)} <span class="statistic__item-description">m</span></p>
+            <p class="statistic__item-text">${getWatchedMoviesLength(filmCards, `hours`)} <span class="statistic__item-description">h</span> ${getWatchedMoviesLength(filmCards, `minutes`)} <span class="statistic__item-description">m</span></p>
           </li>
           <li class="statistic__text-item">
             <h4 class="statistic__item-title">Top genre</h4>
-            <p class="statistic__item-text">${actuallyFilmCards.length ? getTopGenre(actuallyFilmCards) : ``}</p>
+            <p class="statistic__item-text">${filmCards.length ? getTopGenre(filmCards) : ``}</p>
           </li>
         </ul>
 
@@ -244,16 +232,14 @@ export const createStatisticsTemplate = (actuallyFilmCards, filmCards) => {
 export default class Statistics extends AbstractSmartComponent {
   constructor(filmCards) {
     super();
-    this._filmCards = filmCards.getFilmCardsAll();
+    this._filmCards = filmCards;
     this._actuallyCards = this._filmCards.slice(0, this._filmCards.length);
 
     this.setPeriodStatistic();
 
     this._chart = null;
 
-    this._renderCharts();
-
-    // this._activeStatistic = `checked`;
+    // this._renderCharts();
 
     this._nowDate = new Date();
     this._yesterday = new Date();
@@ -265,24 +251,23 @@ export default class Statistics extends AbstractSmartComponent {
     this._yearDate = new Date();
     this._yearDate.setDate(this._nowDate.getDate() - 365);
 
-    // this.statisticElement = this.getElement().querySelector(`.statistic__chart`);
+
   }
 
   getTemplate() {
-    return createStatisticsTemplate(this._actuallyCards, this._filmCards);
+    return createStatisticsTemplate(this._actuallyCards);
   }
 
-  hide() {
+  /* hide() {
     super.hide(this.getElement());
-  }
+  }*/
 
-  show() {
+/* show() {
     super.show(this.getElement());
     this.rerender();
-  }
+  }*/
 
-  rerender(filmCards = this._filmCards) {
-    this._actuallyCards = filmCards;
+/*  rerender() {
     super.rerender();
   }
 
@@ -293,90 +278,58 @@ export default class Statistics extends AbstractSmartComponent {
 
   _renderCharts() {
     const statisticElement = this.getElement().querySelector(`.statistic__chart`);
-    if (this._actuallyCards.length) {
-      this._chart = renderChart(statisticElement, this._actuallyCards);
-    }
+    this._chart = renderChart(statisticElement, this._filmCards);
   }
 
   _resetCharts() {
-    if (this._chart) {
-      this._chart.destroy();
-      this._chart = null;
-    }
+    this._chart.destroy();
+    this._chart = null;
   }
-  // выглядит чудовищно, даже не знаю как скрутить, много всего нужно конфигурировать, хотя повторного кода много...
+
   setPeriodStatistic() {
+
     this.getElement().querySelector(`.statistic__filters`)
     .addEventListener(`click`, (evt) => {
       if (evt.target.closest(`INPUT`)) {
         const statisticElement = this.getElement().querySelector(`.statistic__chart`);
 
         if (evt.target.id === STATISTICS_MENU.ALL_TIME) {
-          this._actuallyCards = getOnPeriodCards(this._filmCards, 0, this._nowDate);
-          if (!this._actuallyCards.length) {
-            this.rerender([]);
-            this._resetCharts();
-            document.getElementById(`statistic-all-time`).checked = true;
-          } else {
-            this._resetCharts();
-            this.rerender(this._actuallyCards);
-            document.getElementById(`statistic-all-time`).checked = true;
-            this._chart = renderChart(statisticElement, this._actuallyCards);
-          }
+          let b = getOnPeriodCards(this._filmCards, 0, this._nowDate);
+          this._actuallyCards = b;
+          this._resetCharts();
+          this.rerender();
+          this._chart = renderChart(statisticElement, this._actuallyCards); console.log(this._actuallyCards);
         }
         if (evt.target.id === STATISTICS_MENU.TODAY) {
-          this._actuallyCards = getOnPeriodCards(this._filmCards, this._yesterday, this._nowDate);
-          if (!this._actuallyCards.length) {
-            this.rerender([]);
-            this._resetCharts();
-            document.getElementById(`statistic-today`).checked = true;
-          } else {
-            this._resetCharts();
-            this.rerender(this._actuallyCards);
-            document.getElementById(`statistic-today`).checked = true;
-            this._chart = renderChart(statisticElement, this._actuallyCards);
-          }
+          let b = getOnPeriodCards(this._filmCards, this._yesterday, this._nowDate);
+          this._actuallyCards = b;
+          this._resetCharts();
+          this._chart = renderChart(statisticElement, b);
+          this.rerender();
         }
         if (evt.target.id === STATISTICS_MENU.WEEK) {
-          this._actuallyCards = getOnPeriodCards(this._filmCards, this._sevenDaysDate, this._nowDate);
-          if (!this._actuallyCards.length) {
-            this.rerender([]);
-            this._resetCharts();
-            document.getElementById(`statistic-week`).checked = true;
-          } else {
-            this._resetCharts();
-            this.rerender(this._actuallyCards);
-            document.getElementById(`statistic-week`).checked = true;
-            this._chart = renderChart(statisticElement, this._actuallyCards);
-          }
+          let b = getOnPeriodCards(this._filmCards, this._sevenDaysDate, this._nowDate);
+          this._actuallyCards = b;
+          this._resetCharts();
+          this._chart = renderChart(statisticElement, b);
+          this.rerender();
         }
         if (evt.target.id === STATISTICS_MENU.MONTH) {
-          this._actuallyCards = getOnPeriodCards(this._filmCards, this._thirtyDaysDate, this._nowDate);
-          if (!this._actuallyCards.length) {
-            this.rerender([]);
-            this._resetCharts();
-            document.getElementById(`statistic-month`).checked = true;
-          } else {
-            this._resetCharts();
-            this.rerender(this._actuallyCards);
-            document.getElementById(`statistic-month`).checked = true;
-            this._chart = renderChart(statisticElement, this._actuallyCards);
-          }
+          let b = getOnPeriodCards(this._filmCards, this._thirtyDaysDate, this._nowDate);
+          this._actuallyCards = b;
+          this._resetCharts();
+          this._chart = renderChart(statisticElement, b);
+          this.rerender();
         }
         if (evt.target.id === STATISTICS_MENU.YEAR) {
-          this._actuallyCards = getOnPeriodCards(this._filmCards, this._yearDate, this._nowDate);
-          if (!this._actuallyCards.length) {
-            this.rerender([]);
-            this._resetCharts();
-            document.getElementById(`statistic-year`).checked = true;
-          } else {
-            this._resetCharts();
-            this.rerender(this._actuallyCards);
-            document.getElementById(`statistic-year`).checked = true;
-            this._chart = renderChart(statisticElement, this._actuallyCards);
-          }
+          let b = getOnPeriodCards(this._filmCards, this._yearDate, this._nowDate);
+          this._actuallyCards = b;
+          this._resetCharts();
+          this.rerender();
+          this._chart = renderChart(statisticElement, this._actuallyCards); console.log(b);
         }
       }
     });
   }
-}
+
+}*/

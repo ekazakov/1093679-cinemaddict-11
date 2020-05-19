@@ -86,12 +86,14 @@ export default class PageController {
 
   hide() {
     const sort = document.querySelector(`.sort`);
-    sort.classList.add(HIDDEN_CLASS);
+    if (sort) {
+      sort.classList.add(HIDDEN_CLASS);
+    }
     this._filmsElement.classList.add(HIDDEN_CLASS);
   }
 
   show() {
-    // this.setHandSortChange(SortType.DEFAULT);
+    this.setHandSortChange(SortType.DEFAULT);
     const sort = document.querySelector(`.sort`);
     sort.classList.remove(HIDDEN_CLASS);
     this._filmsElement.classList.remove(HIDDEN_CLASS);
@@ -119,8 +121,9 @@ export default class PageController {
   _removeFilmCards() {
     this._showedFilmCards.forEach((movieController) => {
       movieController.destroy();
-      this._countShowingFilmCards = [];
     });
+    this._countShowingFilmCards = 0; // новая строка
+    this._countShowingFilmCards = []; // ! внутри foreach
   }
   // ---------------show-more-btn ---------------------------------------
   renderShowMoreBtn() {

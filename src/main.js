@@ -14,8 +14,9 @@ const NO_FILMS = `<h2 class="films-list__title">There are no movies in our datab
 
 
 // ----------------new-statistics------------------------
-import Statistics from "./components/statistics-template.js";
+import StatisticsComponent from "./components/statistics-template.js";
 // -----------------------------------------------------
+
 
 const headerElement = document.querySelector(`.header`);
 const mainElement = document.querySelector(`.main`);
@@ -39,7 +40,7 @@ if (FILMS_CARDS_ARR.length) {
 }
 
 
-const statistics = new Statistics(filmCardsModel);
+const statistics = new StatisticsComponent(filmCardsModel);
 render(mainElement, statistics, RenderPosition.BEFOREEND);
 statistics.hide();
 
