@@ -1,31 +1,11 @@
 // import AbstractComponent from "./abstract-component.js";
 import AbstractSmartComponent from "./abstract-smart-component.js";
 import {FilterType} from "../utils/const.js";
-// import {getCardsByFilter} from "../utils/filter-cards.js";
+
 
 const activeLinkHtml = `main-navigation__item--active`;
 
-// let activeFilter = FilterType.ALL;
-
-/* const createFilterTemplate = (filter) => {
-  const {isChecked, count} = filter;
-  return `<a href="#history" class="main-navigation__item ${isChecked ? activeLinkHtml : ``}">History <span class="main-navigation__item-count">${count}</span></a>`;
-};
-export const createFiltersTemplate = () => {
-  return (
-    `<nav class="main-navigation">
-      <div class="main-navigation__items">
-        <a href="#all" class="main-navigation__item ${activeFilter === FilterType.ALL ? activeLinkHtml : ``}">All movies</a>
-        <a href="#watchlist" class="main-navigation__item ${activeFilter === FilterType.WATCHLIST ? activeLinkHtml : ``}">Watchlist <span class="main-navigation__item-count">0</span></a>
-        <a href="#history" class="main-navigation__item ${activeFilter === FilterType.HISTORY ? activeLinkHtml : ``}">History <span class="main-navigation__item-count">0</span></a>
-        <a href="#favorites" class="main-navigation__item ${activeFilter === FilterType.FAVORITES ? activeLinkHtml : ``}">Favorites <span class="main-navigation__item-count">0</span></a>
-      </div>
-      <a href="#stats" class="main-navigation__additional">Stats</a>
-    </nav>`
-  );
-};*/
-// ${filter.checked ? activeLinkHtml : ``}
-const createFiltersTemplate = (filters, activeFilter) => { // console.log(filters);
+const createFiltersTemplate = (filters, activeFilter) => {
   const createFilters = () => {
     let html = ``;
     filters.slice(1, filters.length).forEach((filter) => {
@@ -39,18 +19,19 @@ const createFiltersTemplate = (filters, activeFilter) => { // console.log(filter
           <a href="#all" class="main-navigation__item ${activeFilter === FilterType.ALL ? activeLinkHtml : ``}">All movies</a>
           ${createFilters()}
         </div>
-        <a href="#stats" class="main-navigation__additional">Stats</a>
+        <a href="#stats" class="main-navigation__additional ${activeFilter === `stats` ? activeLinkHtml : ``}">Stats</a>
       </nav>`;
 };
 
 
 export default class Filter extends AbstractSmartComponent {
-  constructor(filters) {
+  constructor(filters, activeFilter = FilterType.ALL) {
     super();
 
     this._filters = filters;
-    this._activeFilter = FilterType.ALL;
+    this._activeFilter = activeFilter;
     this._handler = null;
+    this.setOnchangeHandler = null;
   }
 
   getTemplate() {
@@ -63,13 +44,14 @@ export default class Filter extends AbstractSmartComponent {
 
   recoveryListeners() {
     this.setClickOnFiltersHandler(this._handler);
+    this.setOnchange(this.setOnchangeHandler);
   }
 
   setClickOnFiltersHandler(handler) {
     this._handler = handler;
+
     this.getElement().querySelector(`.main-navigation__item:nth-of-type(1)`)
     .addEventListener(`click`, () => {
-      // let filterName = evt.target.href.substring(hrefPath.length);
       const filterName = FilterType.ALL;
       this._activeFilter = filterName;
       handler(filterName);
@@ -99,6 +81,25 @@ export default class Filter extends AbstractSmartComponent {
       this._activeFilter = filterName;
       handler(filterName);
       this.rerender();
+    });
+
+    this.getElement().querySelector(`.main-navigation__additional`)
+    .addEventListener(`click`, () => {
+      const filterName = `stats`;
+      this._activeFilter = filterName;
+      this.rerender();
+    });
+  }
+
+  setOnchange(handler) {
+    this.setOnchangeHandler = handler;
+    this.getElement()
+    .addEventListener(`click`, (evt) => {
+      if (evt.target.tagName === `A`) {
+        const prefixHref = `http://localhost:8080/#`;
+        let menuItem = evt.target.href.substring(prefixHref.length);
+        handler(menuItem);
+      }
     });
   }
 

@@ -6,7 +6,7 @@ export default class FilmCards {
     this._filmCards = [];
     this._dataChangeHandlers = [];
     this._filterChangeHandlers = [];
-    this._activeFilterType = FilterType.ALL; console.log(this._activeFilterType);
+    this._activeFilterType = FilterType.ALL;
   }
 
 
@@ -15,9 +15,7 @@ export default class FilmCards {
   }
 
   getFilmCards() {
-    let a = getCardsByFilter(this._filmCards, this._activeFilterType); console.log(a);
     return getCardsByFilter(this._filmCards, this._activeFilterType);
-    // return this._filmCards;
   }
 
   setFilmCards(filmCards) {
@@ -38,6 +36,31 @@ export default class FilmCards {
     }
     this._filmCards = [].concat(this._filmCards.slice(0, index), filmCard, this._filmCards.slice(index + 1));
     this._callHandlers(this._dataChangeHandlers);
+    console.log(this._filmCards);
+    return true;
+  }
+
+  removeComment(filmCard, removableComment) {
+    const index = filmCard.comments.findIndex((it) => it.id === removableComment._commentData.id);
+
+    if (index === -1) {
+      return false;
+    }
+
+    filmCard.commentsNumber -= 1;
+    filmCard.comments = [].concat(filmCard.comments.slice(0, index), filmCard.comments.slice(index + 1));
+
+    this._callHandlers(this._dataChangeHandlers);
+
+    return true;
+  }
+
+  addComment(filmCard, comment) {
+    filmCard.commentsNumber += 1;
+
+    filmCard.comments.push(comment);
+
+    this._callHandlers(this._dataChangeHandlers);
 
     return true;
   }
@@ -46,7 +69,7 @@ export default class FilmCards {
     this._filterChangeHandlers.push(handler);
   }
 
-  setDataChangeHandler(handler) { console.log(handler);
+  setDataChangeHandler(handler) {
     this._dataChangeHandlers.push(handler);
   }
 

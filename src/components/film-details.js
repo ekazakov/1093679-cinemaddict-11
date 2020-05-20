@@ -1,12 +1,11 @@
 import {formatFullDateMovie} from "../utils/common.js";
 import {formatTimeLengthMovie} from "../utils/common.js";
-// import AbstractComponent from "./abstract-component.js";
+import {KEY} from "../utils/const.js";
 import AbstractSmartComponent from "./abstract-smart-component.js";
+import {encode} from "he";
 
-// let templatePictureSmile = ``;
-const checkedTemplate = `checked`;
 
-export const createFilmDetails = (filmCardData, templatePictureSmile) => {
+export const createFilmDetails = (filmCardData, templatePictureSmile, commentText) => {
   const formatGenre = (genreArr) => {
     let html = ``;
     for (let i = 0; i < genreArr.length; i++) {
@@ -14,6 +13,16 @@ export const createFilmDetails = (filmCardData, templatePictureSmile) => {
     }
     return html;
   };
+
+  const formatSmile = () => {
+    if (templatePictureSmile) {
+      templatePictureSmile = templatePictureSmile;
+    } else {
+      templatePictureSmile = `smile`;
+    }
+    return `<img src="images/emoji/${templatePictureSmile}.png" width="55" height="55" alt="emoji-${templatePictureSmile}">`;
+  };
+
   return (
     `<section class="film-details">
       <form class="film-details__inner" action="" method="get">
@@ -78,13 +87,13 @@ export const createFilmDetails = (filmCardData, templatePictureSmile) => {
           </div>
 
           <section class="film-details__controls">
-            <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist" ${filmCardData.isWatchlist ? checkedTemplate : ``}>
+            <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist" ${filmCardData.isWatchlist ? `checked` : ``}>
             <label for="watchlist" class="film-details__control-label film-details__control-label--watchlist">Add to watchlist</label>
 
-            <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched" ${filmCardData.isAlreadyWatched ? checkedTemplate : ``}>
+            <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched" ${filmCardData.isAlreadyWatched ? `checked` : ``}>
             <label for="watched" class="film-details__control-label film-details__control-label--watched">Already watched</label>
 
-            <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite" ${filmCardData.isFavorite ? checkedTemplate : ``}>
+            <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite" ${filmCardData.isFavorite ? `checked` : ``}>
             <label for="favorite" class="film-details__control-label film-details__control-label--favorite">Add to favorites</label>
           </section>
         </div>
@@ -96,10 +105,10 @@ export const createFilmDetails = (filmCardData, templatePictureSmile) => {
             <ul class="film-details__comments-list"></ul>
 
             <div class="film-details__new-comment">
-              <div for="add-emoji" class="film-details__add-emoji-label">${templatePictureSmile ? templatePictureSmile : ``}</div>
+              <div for="add-emoji" class="film-details__add-emoji-label">${formatSmile()}</div>
 
                 <label class="film-details__comment-label">
-                  <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
+                  <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">${commentText}</textarea>
                 </label>
 
                 <div class="film-details__emoji-list">
@@ -132,35 +141,48 @@ export const createFilmDetails = (filmCardData, templatePictureSmile) => {
   );
 };
 
+const parseFromData = (formData, activeSmile) => {
+  const commenText = formData.get(`comment`);
+  return {
+    commentText: encode(commenText),
+    emoji: activeSmile ? activeSmile : `smile`,
+    commentDate: new Date(),
+    commentAutor: null
+  };
+};
 
 export default class FilmDetails extends AbstractSmartComponent {
-  constructor(filmCardData) {
+  constructor(filmCardData, currentSmile, commentText) {
     super();
     this._filmCardData = filmCardData;
 
-    this._submitHandler = null;
+    this._closeHandler = null;
     this._submitHandlerForBtnOne = null;
     this._submitHandlerForBtntwo = null;
     this._submitHandlerForBtnthree = null;
 
     this._smileHandler = null;
-    this._subscribeOnEvents = this._subscribeOnEvents;
+    this._templatePictureSmile = currentSmile;
+    this._currentCommentText = commentText;
     this._subscribeOnEvents();
-    this._templatePictureSmile = ``;
+
+    this._submitHandler = null;
+    this._setSubmitForm();
   }
 
   getTemplate() {
-    return createFilmDetails(this._filmCardData, this._templatePictureSmile);
+    return createFilmDetails(this._filmCardData, this._templatePictureSmile, this._currentCommentText);
   }
 
   recoveryListeners() {
-    this.setCloseFilmDetailsBtnHandler(this._submitHandler);
+    this.setCloseFilmDetailsBtnHandler(this._closeHandler);
 
     this.setBtnAddtoWatchlistHandler(this._submitHandlerForBtnOne);
     this.setBtnMarkAsWatchedHandler(this._submitHandlerForBtntwo);
     this.setBtnFavoriteHandler(this._submitHandlerForBtnthree);
 
     this._subscribeOnEvents();
+    this._setSubmitForm();
   }
 
   rerender() {
@@ -175,7 +197,7 @@ export default class FilmDetails extends AbstractSmartComponent {
     this.getElement().querySelector(`.film-details__close-btn`)
     .addEventListener(`click`, handler);
 
-    this._submitHandler = handler;
+    this._closeHandler = handler;
   }
 
 
@@ -201,31 +223,52 @@ export default class FilmDetails extends AbstractSmartComponent {
     this._submitHandlerForBtnthree = handler;
   }
 
-  /* setChangeSmile() {
-    this.getElement().querySelector(`.film-details__emoji-list`)
-    .addEventListener(`click`, (evt) => {
-      if (evt.target.closest(`INPUT`)) {
-        templatePictureSmile = `<img src="images/emoji/${evt.target.value}.png" width="55" height="55" alt="emoji-${evt.target.value}">`;
-        this.rerender();
-      }
-    });
-  }*/
-  /* setChangeSmile(handler) {
-    this.getElement().querySelector(`.film-details__emoji-list`)
-    .addEventListener(`click`, handler);
-  }*/
   _subscribeOnEvents() {
     this.getElement().querySelector(`.film-details__emoji-list`)
     .addEventListener(`click`, (evt) => {
       if (evt.target.closest(`INPUT`)) {
-        this._templatePictureSmile = `<img src="images/emoji/${evt.target.value}.png" width="55" height="55" alt="emoji-${evt.target.value}">`;
+
+        this._templatePictureSmile = evt.target.value;
+        this._currentCommentText = this.getData().commentText;
         this.rerender();
-        this._smileHandler(); // а как мы смогли вызвать свойство обьекта ?
-      }//  Т.е. если круглые скобки инициируют вызов ф-ции, содержимое this.smilehandler может быть вызвано как ф-ция НО и может просто хранить значения ?
-    });// как тогда содержимое из this может выполнится если все описания в другом файле ?
-  } // тоесть там хранится ссылка на конкретный участок кода ? wait... what...
+        this._smileHandler(this._templatePictureSmile);
+        this._setCurrentText(this._currentCommentText);
+      }
+    });
+  }
 
   setChangeSmile(handler) {
     this._smileHandler = handler;
   }
+
+  setCurrentSmile(smile) {
+    this._templatePictureSmile = smile;
+  }
+
+  _setCurrentText(text) {
+    this._currentCommentText = text;
+    this.getElement().querySelector(`.film-details__comment-input`).value = `${text}`;
+  }
+
+  getData() {
+    const form = this.getElement().querySelector(`.film-details__inner`);
+    const formData = new FormData(form);
+
+    return parseFromData(formData, this._templatePictureSmile);
+  }
+
+  _setSubmitForm() {
+    this.getElement().querySelector(`form`)
+    .addEventListener(`keydown`, (evt) => {
+      if (evt.ctrlKey && evt.key === KEY.ENTER) {
+        this._submitHandler();
+      }
+    });
+  }
+
+  setForm(handler) {
+    this._submitHandler = handler;
+  }
+
+
 }
