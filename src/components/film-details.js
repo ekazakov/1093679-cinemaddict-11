@@ -3,6 +3,7 @@ import {formatTimeLengthMovie} from "../utils/common.js";
 import {KEY} from "../utils/const.js";
 import AbstractSmartComponent from "./abstract-smart-component.js";
 import {encode} from "he";
+import Comment from "../models/comment.js";
 
 
 export const createFilmDetails = (filmCardData, templatePictureSmile, commentText) => {
@@ -143,12 +144,19 @@ export const createFilmDetails = (filmCardData, templatePictureSmile, commentTex
 
 const parseFromData = (formData, activeSmile) => {
   const commenText = formData.get(`comment`);
-  return {
+  /* return {
     commentText: encode(commenText),
     emoji: activeSmile ? activeSmile : `smile`,
     commentDate: new Date(),
     commentAutor: null
-  };
+  };*/
+
+  return new Comment({
+    // "author": null,
+    "comment": encode(commenText),
+    "date": new Date().toISOString(),
+    "emotion": activeSmile ? activeSmile : `smile`,
+  });
 };
 
 export default class FilmDetails extends AbstractSmartComponent {
@@ -255,6 +263,7 @@ export default class FilmDetails extends AbstractSmartComponent {
     const formData = new FormData(form);
 
     return parseFromData(formData, this._templatePictureSmile);
+    // return new FormData(form);
   }
 
   _setSubmitForm() {

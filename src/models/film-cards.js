@@ -19,7 +19,8 @@ export default class FilmCards {
   }
 
   setFilmCards(filmCards) {
-    this._filmCards = Array.from(filmCards);
+    // this._filmCards = Array.from(filmCards);
+    this._filmCards = filmCards;
     this._callHandlers(this._dataChangeHandlers);
   }
 
@@ -36,7 +37,6 @@ export default class FilmCards {
     }
     this._filmCards = [].concat(this._filmCards.slice(0, index), filmCard, this._filmCards.slice(index + 1));
     this._callHandlers(this._dataChangeHandlers);
-    console.log(this._filmCards);
     return true;
   }
 

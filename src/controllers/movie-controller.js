@@ -1,9 +1,21 @@
-
 import FilmDetailsComponent from "../components/film-details.js";
 import CommentComponent from "../components/comment-template.js";
 import FilmCardComponent from "../components/film-card-template.js";
 import {RenderPosition, Mode, DEFAULT_SMILE, KEY} from "../utils/const.js";
 import {render, remove, replace} from "../utils/render.js";
+
+// import FilmCard from "../models/film-card.js";
+// import {encode} from "he";
+
+/* const parseFromData = (formData, activeSmile) => {
+  const commenText = formData.get(`comment`);
+  return {
+    commentText: encode(commenText),
+    emoji: activeSmile ? activeSmile : `smile`,
+    commentDate: new Date(),
+    commentAutor: null
+  };
+};*/
 
 
 export default class MovieController {
