@@ -122,7 +122,6 @@ export default class MovieController {
       // this._onDataChange(this, filmCard, Object.assign({}, filmCard, {
       const newFilmCard = FilmCard.clone(filmCard);
       newFilmCard.isWatchlist = !newFilmCard.isWatchlist;
-
       this._onDataChange(this, filmCard, newFilmCard);
       // }));
     });

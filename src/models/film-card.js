@@ -17,7 +17,7 @@ export default class FilmCard {
     this.ageRating = data.film_info[`age_rating`];
     this.comments = data[`comments`];
     this.commentsNumber = this.comments.length;
-
+    // this.commentsNumber = data[`comments`].length;
     this.isWatchlist = Boolean(data.user_details[`watchlist`]);
     this.isAlreadyWatched = Boolean(data.user_details[`already_watched`]);
     this.isFavorite = Boolean(data.user_details[`favorite`]);
@@ -25,9 +25,17 @@ export default class FilmCard {
     this.watchingDate = data.user_details[`watching_date`] ? new Date(data.user_details[`watching_date`]) : null;
   }
 
+  getIdComments() {
+    let commentsArr = [];
+    this.comments.forEach((comment) => {
+      commentsArr.push(comment.id);
+    });
+    return commentsArr;
+  }
+
   filmCardToRAW() {
     return {
-      "comments": this.comments,
+      "comments": this.getIdComments(),
       "film_info": {
         "actors": this.actors,
         "age_rating": this.ageRating,
@@ -36,7 +44,10 @@ export default class FilmCard {
         "director": this.director,
         "genre": this.genre,
         "poster": this.poster,
-        "release": this.productionDate.toISOString(),
+        "release": {
+          "date": this.productionDate.toISOString(),
+          "release_country": this.country
+        },
         "runtime": this.movieLength,
         "title": this.title,
         "total_rating": this.rating,
@@ -46,7 +57,7 @@ export default class FilmCard {
       "user_details": {
         "already_watched": this.isAlreadyWatched,
         "favorite": this.isFavorite,
-        "watching_date": this.watchingDate ? this.watchingDate.toISOString() : ``,
+        "watching_date": this.isAlreadyWatched ? this.watchingDate.toISOString() : ``,
         "watchlist": this.isWatchlist
       }
     };
