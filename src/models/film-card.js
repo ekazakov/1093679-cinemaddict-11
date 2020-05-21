@@ -44,14 +44,17 @@ export default class FilmCard {
       },
       "id": this.id,
       "user_details": {
-        "already_watched": this.isAlreadyWatched ? this.isAlreadyWatched.toISOString() : ``,
+        "already_watched": this.isAlreadyWatched,
         "favorite": this.isFavorite,
-        "watching_date": this.watchingDate,
+        "watching_date": this.watchingDate ? this.watchingDate.toISOString() : ``,
         "watchlist": this.isWatchlist
       }
     };
   }
 
+  static clone(data) {
+    return new FilmCard(data.filmCardToRAW());
+  }
 
   static parseFilmCard(data) {
     return new FilmCard(data);

@@ -4,6 +4,7 @@ import FilmCardComponent from "../components/film-card-template.js";
 import {RenderPosition, Mode, DEFAULT_SMILE, KEY} from "../utils/const.js";
 import {render, remove, replace} from "../utils/render.js";
 
+import FilmCard from "../models/film-card.js";
 // import FilmCard from "../models/film-card.js";
 // import {encode} from "he";
 
@@ -118,9 +119,12 @@ export default class MovieController {
     this._filmDetailsComponent.setBtnAddtoWatchlistHandler(() => {
       this._currentCommentText = this._filmDetailsComponent.getData().commentText;
 
-      this._onDataChange(this, filmCard, Object.assign({}, filmCard, {
-        isWatchlist: !filmCard.isWatchlist,
-      }));
+      // this._onDataChange(this, filmCard, Object.assign({}, filmCard, {
+      const newFilmCard = FilmCard.clone(filmCard);
+      newFilmCard.isWatchlist = !newFilmCard.isWatchlist;
+
+      this._onDataChange(this, filmCard, newFilmCard);
+      // }));
     });
 
     this._filmDetailsComponent.setBtnMarkAsWatchedHandler(() => {
