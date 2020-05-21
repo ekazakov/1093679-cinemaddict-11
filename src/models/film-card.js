@@ -25,17 +25,20 @@ export default class FilmCard {
     this.watchingDate = data.user_details[`watching_date`] ? new Date(data.user_details[`watching_date`]) : null;
   }
 
-  getIdComments() {
+  /*getIdComments(comments) {
     let commentsArr = [];
-    this.comments.forEach((comment) => {
-      commentsArr.push(comment.id);
+    comments.forEach((comment) => {
+      if (comment.id) {
+        commentsArr.push(comment.id);
+      }
     });
+    // console.log(commentsArr);
     return commentsArr;
-  }
+  }*/
 
   filmCardToRAW() {
     return {
-      "comments": this.getIdComments(),
+      "comments": this.comments,
       "film_info": {
         "actors": this.actors,
         "age_rating": this.ageRating,
@@ -50,7 +53,7 @@ export default class FilmCard {
         },
         "runtime": this.movieLength,
         "title": this.title,
-        "total_rating": this.rating,
+        "total_rating": Number(this.rating),
         "writers": this.screenwriters
       },
       "id": this.id,

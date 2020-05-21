@@ -56,6 +56,7 @@ const API = class {
       .then((response) => response.json())
       // .then(FilmCard.parseFilmCards);
       .then(FilmCard.parseFilmCard);
+
   }
 
   updateFilmCard(id, data) {

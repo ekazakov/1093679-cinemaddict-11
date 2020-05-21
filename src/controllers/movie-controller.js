@@ -73,6 +73,13 @@ export default class MovieController {
       document.removeEventListener(`keydown`, this._onEscKeyDown);
     }
   }
+  getIdComments(comments) { // !
+    let commentsArr = [];
+    comments.forEach((comment) => {
+      commentsArr.push(comment.id);
+    });
+    return commentsArr;
+  }
   // ------------------------------render-film-card-------------------------
   render(place, filmCard) {
     const filmCardComponent = this._filmCardComponent;
@@ -120,8 +127,12 @@ export default class MovieController {
       this._currentCommentText = this._filmDetailsComponent.getData().commentText;
 
       // this._onDataChange(this, filmCard, Object.assign({}, filmCard, {
+      let a = this.getIdComments(filmCard.comments);
+      filmCard.comments = a;
       const newFilmCard = FilmCard.clone(filmCard);
+      console.log(newFilmCard);
       newFilmCard.isWatchlist = !newFilmCard.isWatchlist;
+      console.log(newFilmCard);
       this._onDataChange(this, filmCard, newFilmCard);
       // }));
     });
