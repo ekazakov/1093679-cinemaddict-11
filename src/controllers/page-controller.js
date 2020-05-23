@@ -85,14 +85,17 @@ export default class PageController {
     } else if (newData && oldData && !comment) {
       this._api.updateFilmCard(oldData.id, newData)
       .then((filmCard) => {
-        this._api.getFullFilmCards(filmCard, filmCard.id);
+        return this._api.getFullFilmCard(filmCard, filmCard.id)
+        .then(() => {
+          return filmCard;
+        });
       })
       .then((filmCard) => {
-        const isSuccess = this._filmCardsModel.updateFilmCard(oldData.id, newData);
+        const isSuccess = this._filmCardsModel.updateFilmCard(oldData.id, filmCard); // newData
 
         if (isSuccess) {
           movieController.render(this._filmsListContainer, filmCard);
-          this._updateFilmCards(this.__countShowingFilmCards);
+          // this._updateFilmCards(this.__countShowingFilmCards);
         }
       });
     }

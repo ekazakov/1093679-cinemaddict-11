@@ -7,13 +7,29 @@ export default class Comment {
     this.commentDate = new Date(comment.date);
   }
 
-  commentToRAW() {
+  commentToSend() {
     return {
       // "author": this.commentAutor,
       "comment": this.commentText,
       "date": this.commentDate.toISOString(),
       "emotion": this.emoji
     };
+  }
+
+  commentToRAW() {
+    return {
+      "id": this.id,
+      "emotion": this.emoji,
+      "comment": this.commentText,
+      "author": this.commentAutor,
+      "date": this.commentDate.toISOString()
+    };
+  }
+
+  static clone(data) {
+    // let newComments = [];
+    // newComments = data.map((comment) => comment.commentToRAW());
+    return new Comment(data.commentToRAW());
   }
 
   static parseComment(data) {

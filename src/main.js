@@ -4,7 +4,7 @@ import UserRankHeaderProfileComponent from "./components/user-rank-header-profil
 import FilterController from "./controllers/filter-controller.js";
 import FooterStatisticsComponent from "./components/footer-statistics-template.js";
 import PageController from "./controllers/page-controller.js";
-import {render} from "./utils/render.js";
+import {render, remove} from "./utils/render.js";
 import {RenderPosition} from "./utils/const.js";
 import FilmCardsModel from "./models/film-cards.js";
 import StatisticsComponent from "./components/statistics-template.js";
@@ -35,7 +35,8 @@ const pageController = new PageController(filmCardsModel, mainElement, api);
 // if (FILMS_CARDS_ARR.length) {
 // console.log(FILMS_CARDS_ARR);
 
-api.getFilmCards()
+
+/* api.getFilmCards()
   .then((filmCards) => {
     filmCards.forEach((filmCard, index) => {
       api.getFullFilmCards(filmCard, index);
@@ -43,8 +44,25 @@ api.getFilmCards()
     filmCardsModel.setFilmCards(filmCards);
     pageController.render();
     console.log(filmCards);
+  });*/
+mainElement.insertAdjacentHTML(RenderPosition.BEFOREEND, LOADING);
+let loading = mainElement.querySelector(`.films-list__title`);
+
+api.getFilmCards()
+.then((filmCards) => {
+  const fullFilmCards = [];
+  filmCards.forEach((filmCard, index) => {
+    const fullFilmCard = api.getFullFilmCard(filmCard, index);
+    fullFilmCards.push(fullFilmCard);
   });
 
+  Promise.all(fullFilmCards)
+  .then(() => {
+    loading.remove();
+    filmCardsModel.setFilmCards(filmCards);
+    pageController.render();
+  });
+});
 // } else {
 // mainElement.insertAdjacentHTML(RenderPosition.BEFOREEND, NO_FILMS);
 // }

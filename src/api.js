@@ -24,10 +24,10 @@ const API = class {
     .then((response) => response.json())
     // .then((response) => console.log(response))
     .then(FilmCard.parseFilmCards);
-
   }
 
-  getFullFilmCards(filmCard, indexCard) {
+
+  getFullFilmCard(filmCard, indexCard) {
     const headers = new Headers();
     headers.append(`Authorization`, this._authorization);
 
@@ -40,6 +40,7 @@ const API = class {
       filmCard.comments = Comment.parseComments(response);
     });
   }
+
 
   updateCommentCard(id, data) {
     const headers = new Headers();

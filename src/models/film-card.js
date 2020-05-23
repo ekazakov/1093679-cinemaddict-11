@@ -1,3 +1,5 @@
+import Comment from "../models/comment.js";
+
 export default class FilmCard {
   constructor(data) {
     this.id = data[`id`];
@@ -25,7 +27,7 @@ export default class FilmCard {
     this.watchingDate = data.user_details[`watching_date`] ? new Date(data.user_details[`watching_date`]) : null;
   }
 
-  /*getIdComments(comments) {
+  /* getIdComments(comments) {
     let commentsArr = [];
     comments.forEach((comment) => {
       if (comment.id) {
@@ -35,10 +37,14 @@ export default class FilmCard {
     // console.log(commentsArr);
     return commentsArr;
   }*/
+  getIdComments(comments) {
+    let commentsId = comments.map((comment) => comment.id);
+    return commentsId;
+  }
 
   filmCardToRAW() {
     return {
-      "comments": this.comments,
+      "comments": this.getIdComments(this.comments),
       "film_info": {
         "actors": this.actors,
         "age_rating": this.ageRating,
@@ -60,14 +66,17 @@ export default class FilmCard {
       "user_details": {
         "already_watched": this.isAlreadyWatched,
         "favorite": this.isFavorite,
-        "watching_date": this.isAlreadyWatched ? this.watchingDate.toISOString() : ``,
+        "watching_date": this.watchingDate ? this.watchingDate.toISOString() : null,
         "watchlist": this.isWatchlist
       }
     };
   }
 
   static clone(data) {
-    return new FilmCard(data.filmCardToRAW());
+    let comments = data.comments.map((comment) => new Comment(comment.commentToRAW())); // data.comments;
+    let newFilmCard = new FilmCard(data.filmCardToRAW());
+    newFilmCard.comments = comments;
+    return newFilmCard;
   }
 
   static parseFilmCard(data) {
