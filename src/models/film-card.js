@@ -9,7 +9,6 @@ export default class FilmCard {
     this.movieLength = data.film_info[`runtime`];
     this.genre = data.film_info[`genre`];
     this.description = data.film_info[`description`];
-    // this.productionDate = data.film_info.release[`date`];
     this.productionDate = data.film_info.release[`date`] ? new Date(data.film_info.release[`date`]) : null;
     this.originalTitle = data.film_info[`alternative_title`];
     this.director = data.film_info[`director`];
@@ -19,7 +18,6 @@ export default class FilmCard {
     this.ageRating = data.film_info[`age_rating`];
     this.comments = data[`comments`];
     this.commentsNumber = this.comments.length;
-    // this.commentsNumber = data[`comments`].length;
     this.isWatchlist = Boolean(data.user_details[`watchlist`]);
     this.isAlreadyWatched = Boolean(data.user_details[`already_watched`]);
     this.isFavorite = Boolean(data.user_details[`favorite`]);
@@ -27,16 +25,6 @@ export default class FilmCard {
     this.watchingDate = data.user_details[`watching_date`] ? new Date(data.user_details[`watching_date`]) : null;
   }
 
-  /* getIdComments(comments) {
-    let commentsArr = [];
-    comments.forEach((comment) => {
-      if (comment.id) {
-        commentsArr.push(comment.id);
-      }
-    });
-    // console.log(commentsArr);
-    return commentsArr;
-  }*/
   getIdComments(comments) {
     let commentsId = comments.map((comment) => comment.id);
     return commentsId;
@@ -73,7 +61,7 @@ export default class FilmCard {
   }
 
   static clone(data) {
-    let comments = data.comments.map((comment) => new Comment(comment.commentToRAW())); // data.comments;
+    let comments = data.comments.map((comment) => new Comment(comment.commentToRAW()));
     let newFilmCard = new FilmCard(data.filmCardToRAW());
     newFilmCard.comments = comments;
     return newFilmCard;

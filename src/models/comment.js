@@ -9,7 +9,6 @@ export default class Comment {
 
   commentToSend() {
     return {
-      // "author": this.commentAutor,
       "comment": this.commentText,
       "date": this.commentDate.toISOString(),
       "emotion": this.emoji
@@ -27,8 +26,6 @@ export default class Comment {
   }
 
   static clone(data) {
-    // let newComments = [];
-    // newComments = data.map((comment) => comment.commentToRAW());
     return new Comment(data.commentToRAW());
   }
 
@@ -39,9 +36,4 @@ export default class Comment {
   static parseComments(data) {
     return data.map(Comment.parseComment);
   }
-
-  /* static clone(data) {
-    return new Comment(data.commentToRAW());
-  }*/
-
 }

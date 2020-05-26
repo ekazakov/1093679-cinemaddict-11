@@ -22,7 +22,6 @@ const API = class {
     return fetch(`https://11.ecmascript.pages.academy/cinemaddict/movies`, {headers})
     .then(checkStatus)
     .then((response) => response.json())
-    // .then((response) => console.log(response))
     .then(FilmCard.parseFilmCards);
   }
 
@@ -35,29 +34,36 @@ const API = class {
     .then(checkStatus)
     .then((response) => response.json())
     .then((response) => {
-      // filmCard.comments = response;
-      // console.log(response);
       filmCard.comments = Comment.parseComments(response);
     });
   }
 
 
-  updateCommentCard(id, data) {
+  addCommentCard(id, data) {
+    const headers = new Headers();
+    let comment = new Comment(data.commentToRAW());
+    comment = comment.commentToSend();
+    headers.append(`Authorization`, this._authorization);
+    headers.append(`Content-type`, `application/json`);
+
+    return fetch(`https://11.ecmascript.pages.academy/cinemaddict/comments/${id}`, {
+      method: `POST`,
+      body: JSON.stringify(comment),
+      headers,
+    })
+      .then(checkStatus);
+  }
+
+  deleteCommentCard(id) {
     const headers = new Headers();
     headers.append(`Authorization`, this._authorization);
     headers.append(`Content-type`, `application/json`);
 
-    return fetch(`https://11.ecmascript.pages.academy/cinemaddict/movies/${id}`, {
-      method: `PUT`,
-      // body: JSON.stringify(data),
-      body: JSON.stringify(data.commentToRAW()),
+    return fetch(`https://11.ecmascript.pages.academy/cinemaddict/comments/${id}`, {
+      method: `DELETE`,
       headers,
     })
-      .then(checkStatus)
-      .then((response) => response.json())
-      // .then(FilmCard.parseFilmCards);
-      .then(FilmCard.parseFilmCard);
-
+      .then(checkStatus);
   }
 
   updateFilmCard(id, data) {
@@ -67,13 +73,11 @@ const API = class {
 
     return fetch(`https://11.ecmascript.pages.academy/cinemaddict/movies/${id}`, {
       method: `PUT`,
-      // body: JSON.stringify(data),
       body: JSON.stringify(data.filmCardToRAW()),
       headers,
     })
       .then(checkStatus)
       .then((response) => response.json())
-      // .then(FilmCard.parseFilmCards);
       .then(FilmCard.parseFilmCard);
   }
 };

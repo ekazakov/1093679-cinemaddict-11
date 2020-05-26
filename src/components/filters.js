@@ -1,25 +1,21 @@
-// import AbstractComponent from "./abstract-component.js";
 import AbstractSmartComponent from "./abstract-smart-component.js";
-import {FilterType} from "../utils/const.js";
-
-
-const activeLinkHtml = `main-navigation__item--active`;
+import {FilterType, FILTER_STATS, ACTIVE_LINK_FILTER, PREFIX_HREF} from "../utils/const.js";
 
 const createFiltersTemplate = (filters, activeFilter) => {
   const createFilters = () => {
     let html = ``;
     filters.slice(1, filters.length).forEach((filter) => {
-      html += `<a href="#${filter.name}" class="main-navigation__item ${filter.name === activeFilter ? activeLinkHtml : ``}">${filter.name} <span class="main-navigation__item-count">${filter.count}</span></a>`;
+      html += `<a href="#${filter.name}" class="main-navigation__item ${filter.name === activeFilter ? ACTIVE_LINK_FILTER : ``}">${filter.name} <span class="main-navigation__item-count">${filter.count}</span></a>`;
     });
     return html;
   };
 
   return `<nav class="main-navigation">
         <div class="main-navigation__items">
-          <a href="#all" class="main-navigation__item ${activeFilter === FilterType.ALL ? activeLinkHtml : ``}">All movies</a>
+          <a href="#all" class="main-navigation__item ${activeFilter === FilterType.ALL ? ACTIVE_LINK_FILTER : ``}">All movies</a>
           ${createFilters()}
         </div>
-        <a href="#stats" class="main-navigation__additional ${activeFilter === `stats` ? activeLinkHtml : ``}">Stats</a>
+        <a href="#stats" class="main-navigation__additional ${activeFilter === FILTER_STATS ? ACTIVE_LINK_FILTER : ``}">Stats</a>
       </nav>`;
 };
 
@@ -50,42 +46,19 @@ export default class Filter extends AbstractSmartComponent {
   setClickOnFiltersHandler(handler) {
     this._handler = handler;
 
-    this.getElement().querySelector(`.main-navigation__item:nth-of-type(1)`)
-    .addEventListener(`click`, () => {
-      const filterName = FilterType.ALL;
-      this._activeFilter = filterName;
-      handler(filterName);
-      this.rerender();
-
-    });
-
-    this.getElement().querySelector(`.main-navigation__item:nth-of-type(2)`)
-    .addEventListener(`click`, () => {
-      const filterName = FilterType.WATCHLIST;
-      this._activeFilter = filterName;
-      handler(filterName);
-      this.rerender();
-    });
-
-    this.getElement().querySelector(`.main-navigation__item:nth-of-type(3)`)
-    .addEventListener(`click`, () => {
-      const filterName = FilterType.HISTORY;
-      this._activeFilter = filterName;
-      handler(filterName);
-      this.rerender();
-    });
-
-    this.getElement().querySelector(`.main-navigation__item:nth-of-type(4)`)
-    .addEventListener(`click`, () => {
-      const filterName = FilterType.FAVORITES;
-      this._activeFilter = filterName;
-      handler(filterName);
-      this.rerender();
+    this.getElement().querySelector(`.main-navigation__items`)
+    .addEventListener(`click`, (evt) => {
+      if (evt.target.tagName === `A`) {
+        let filterName = evt.target.href.substring(PREFIX_HREF.length);
+        this._activeFilter = filterName;
+        handler(filterName);
+        this.rerender();
+      }
     });
 
     this.getElement().querySelector(`.main-navigation__additional`)
     .addEventListener(`click`, () => {
-      const filterName = `stats`;
+      const filterName = FILTER_STATS;
       this._activeFilter = filterName;
       this.rerender();
     });
@@ -96,8 +69,7 @@ export default class Filter extends AbstractSmartComponent {
     this.getElement()
     .addEventListener(`click`, (evt) => {
       if (evt.target.tagName === `A`) {
-        const prefixHref = `http://localhost:8080/#`;
-        let menuItem = evt.target.href.substring(prefixHref.length);
+        let menuItem = evt.target.href.substring(PREFIX_HREF.length);
         handler(menuItem);
       }
     });
