@@ -1,9 +1,10 @@
-
 import FilmDetailsComponent from "../components/film-details.js";
 import CommentComponent from "../components/comment-template.js";
 import FilmCardComponent from "../components/film-card-template.js";
 import {RenderPosition, Mode, DEFAULT_SMILE, KEY} from "../utils/const.js";
 import {render, remove, replace} from "../utils/render.js";
+
+import FilmCard from "../models/film-card.js";
 
 
 export default class MovieController {
@@ -60,6 +61,13 @@ export default class MovieController {
       document.removeEventListener(`keydown`, this._onEscKeyDown);
     }
   }
+  getIdComments(comments) { // !
+    let commentsArr = [];
+    comments.forEach((comment) => {
+      commentsArr.push(comment.id);
+    });
+    return commentsArr;
+  }
   // ------------------------------render-film-card-------------------------
   render(place, filmCard) {
     const filmCardComponent = this._filmCardComponent;
@@ -93,6 +101,7 @@ export default class MovieController {
       this._renderComments(filmCard);
     });
 
+
     this._filmDetailsComponent.setCloseFilmDetailsBtnHandler(() => {
       remove(this._filmDetailsComponent);
       this._filmDetailsComponent.rerender();
@@ -106,47 +115,67 @@ export default class MovieController {
     this._filmDetailsComponent.setBtnAddtoWatchlistHandler(() => {
       this._currentCommentText = this._filmDetailsComponent.getData().commentText;
 
-      this._onDataChange(this, filmCard, Object.assign({}, filmCard, {
-        isWatchlist: !filmCard.isWatchlist,
-      }));
+      let newFilmCard = FilmCard.clone(filmCard);
+      newFilmCard.isWatchlist = !newFilmCard.isWatchlist;
+
+      this._onDataChange(this, filmCard, newFilmCard);
     });
 
     this._filmDetailsComponent.setBtnMarkAsWatchedHandler(() => {
       this._currentCommentText = this._filmDetailsComponent.getData().commentText;
 
-      this._onDataChange(this, filmCard, Object.assign({}, filmCard, {
-        isAlreadyWatched: !filmCard.isAlreadyWatched, watchingDate: !filmCard.isAlreadyWatched ? new Date() : null
-      }));
+      let newFilmCard = FilmCard.clone(filmCard);
+      newFilmCard.isAlreadyWatched = !newFilmCard.isAlreadyWatched;
+      newFilmCard.watchingDate = !newFilmCard.isAlreadyWatched ? new Date() : null;
+
+      this._onDataChange(this, filmCard, newFilmCard);
     });
 
     this._filmDetailsComponent.setBtnFavoriteHandler(() => {
       this._currentCommentText = this._filmDetailsComponent.getData().commentText;
 
-      this._onDataChange(this, filmCard, Object.assign({}, filmCard, {
+      /* this._onDataChange(this, filmCard, Object.assign({}, filmCard, {
         isFavorite: !filmCard.isFavorite,
-      }));
+      }));*/
+      let newFilmCard = FilmCard.clone(filmCard);
+      newFilmCard.isFavorite = !newFilmCard.isFavorite;
+
+      this._onDataChange(this, filmCard, newFilmCard);
     });
 
 
     this._filmCardComponent.setBtnAddtoWatchlistHandler((evt) => {
       evt.preventDefault();
-      this._onDataChange(this, filmCard, Object.assign({}, filmCard, {
+      /* this._onDataChange(this, filmCard, Object.assign({}, filmCard, {
         isWatchlist: !filmCard.isWatchlist,
-      }));
+      }));*/
+      let newFilmCard = FilmCard.clone(filmCard);
+      newFilmCard.isWatchlist = !newFilmCard.isWatchlist;
+
+      this._onDataChange(this, filmCard, newFilmCard);
     });
 
     this._filmCardComponent.setBtnMarkAsWatchedHandler((evt) => {
       evt.preventDefault();
-      this._onDataChange(this, filmCard, Object.assign({}, filmCard, {
+      /* this._onDataChange(this, filmCard, Object.assign({}, filmCard, {
         isAlreadyWatched: !filmCard.isAlreadyWatched, watchingDate: !filmCard.isAlreadyWatched ? new Date() : null
-      }));
+      }));*/
+      let newFilmCard = FilmCard.clone(filmCard);
+      newFilmCard.isAlreadyWatched = !newFilmCard.isAlreadyWatched;
+      newFilmCard.watchingDate = !newFilmCard.isAlreadyWatched ? new Date() : null;
+
+      this._onDataChange(this, filmCard, newFilmCard);
     });
 
     this._filmCardComponent.setBtnFavoriteHandler((evt) => {
       evt.preventDefault();
-      this._onDataChange(this, filmCard, Object.assign({}, filmCard, {
+      /* this._onDataChange(this, filmCard, Object.assign({}, filmCard, {
         isFavorite: !filmCard.isFavorite,
-      }));
+      }));*/
+      let newFilmCard = FilmCard.clone(filmCard);
+      newFilmCard.isFavorite = !newFilmCard.isFavorite;
+
+      this._onDataChange(this, filmCard, newFilmCard);
     });
 
     if (filmCardComponent && filmDetailsComponent) {

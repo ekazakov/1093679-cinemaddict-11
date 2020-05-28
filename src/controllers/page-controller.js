@@ -45,9 +45,10 @@ const renderFilmCards = (containerForCards, container, actuallyCardsArr, _onData
 };
 
 export default class PageController {
-  constructor(filmCardsModel, mainElement) {
+  constructor(filmCardsModel, mainElement, api) {
     this._filmCardsModel = filmCardsModel;
     this._mainElement = mainElement;
+    this._api = api;
 
     this._showedFilmCards = [];
     this._newFilmCards = null;
@@ -67,20 +68,36 @@ export default class PageController {
   }
   // --------------------------on-Data-change--------------------------------
   _onDataChange(movieController, oldData, newData, comment = null) {
-    if (!newData && !comment.getElement) {
+    /* if (!newData && !comment.getElement) {
       this._filmCardsModel.addComment(oldData, comment);
-      movieController.render(this._filmsListContainer, oldData);
+      movieController.render(this._filmsListContainer, oldData);*/
+    if (!newData && !comment.getElement) {
+      this._api.updateCommentCard(oldData.id, comment)
+      .then((filmCardComment) => {
+        this._filmCardsModel.addComment(oldData, filmCardComment);
+        movieController.render(this._filmsListContainer, oldData);
+      });
 
     } else if (!newData && comment) {
       this._filmCardsModel.removeComment(oldData, comment);
       movieController.render(this._filmsListContainer, oldData);
 
     } else if (newData && oldData && !comment) {
-      const isSuccess = this._filmCardsModel.updateFilmCard(oldData.id, newData);
+      this._api.updateFilmCard(oldData.id, newData)
+      .then((filmCard) => {
+        return this._api.getFullFilmCard(filmCard, filmCard.id)
+        .then(() => {
+          return filmCard;
+        });
+      })
+      .then((filmCard) => {
+        const isSuccess = this._filmCardsModel.updateFilmCard(oldData.id, filmCard); // newData
 
-      if (isSuccess) {
-        movieController.render(this._filmsListContainer, newData);
-      }
+        if (isSuccess) {
+          movieController.render(this._filmsListContainer, filmCard);
+          // this._updateFilmCards(this.__countShowingFilmCards);
+        }
+      });
     }
   }
 
