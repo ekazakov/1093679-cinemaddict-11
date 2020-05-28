@@ -39,7 +39,7 @@ export const formatTimeLengthMovie = (value) => {
 export const getFormatDescription = (description) => {
   let a;
   if (description.length >= 140) {
-    let arr = description.split(``);
+    const arr = description.split(``);
     a = arr.slice(0, 139).join(``) + `...`;
   } else {
     a = description;

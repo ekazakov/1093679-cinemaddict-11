@@ -180,7 +180,7 @@ export default class PageController {
     this._countShowingFilmCards = CARDS_COUNT;
     this._showMoreBtn.setShowMoreBtnClickHandler(() => {
 
-      let prevFilmCards = this._countShowingFilmCards;
+      const prevFilmCards = this._countShowingFilmCards;
       this._countShowingFilmCards = this._countShowingFilmCards + CARDS_COUNT;
 
       const sortedCards = getSortFilmCards(this._filmCardsModel.getFilmCards(), this._sortComponent.getSortType(), prevFilmCards, this._countShowingFilmCards);

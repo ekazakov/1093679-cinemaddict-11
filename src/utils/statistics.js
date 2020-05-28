@@ -5,7 +5,7 @@ export const getWatchedMovies = (filmCards) => {
 };
 
 export const getRangUser = (filmCards) => {
-  let a = getWatchedMovies(filmCards).length;
+  const a = getWatchedMovies(filmCards).length;
   if (a <= 0) {
     return RangMap.NO_RANG;
   }
@@ -22,7 +22,7 @@ export const getRangUser = (filmCards) => {
 };
 
 export const getWatchedMoviesLength = (filmCards, option) => {
-  let a = getWatchedMovies(filmCards);
+  const a = getWatchedMovies(filmCards);
   let value = 0;
   a.forEach((filmCard) => {
     value += filmCard.movieLength;
@@ -49,8 +49,8 @@ export const getWatchedMoviesLength = (filmCards, option) => {
 };
 
 export const getGenreOnWatchedMovies = (filmCards, options) => {
-  let a = getWatchedMovies(filmCards);
-  let b = [];
+  const a = getWatchedMovies(filmCards);
+  const b = [];
   a.forEach((filmCard) => {
     filmCard.genre.forEach((genre) => {
       if (genre === options) {
@@ -76,7 +76,7 @@ export const getTopGenre = (filmCards) => {
   const a = getGenreData(filmCards);
   let b = 0;
   let c = ``;
-  for (let key in a) {
+  for (const key in a) {
     if (b <= a[key]) {
       b = a[key];
       c = key;
@@ -86,8 +86,8 @@ export const getTopGenre = (filmCards) => {
 };
 
 export const getOnPeriodCards = (filmCards, from, to) => {
-  let a = getWatchedMovies(filmCards);
-  let b = [];
+  const a = getWatchedMovies(filmCards);
+  const b = [];
   a.forEach((filmCard) => {
     if (filmCard.watchingDate <= to && filmCard.watchingDate >= from) {
       b.push(filmCard);
