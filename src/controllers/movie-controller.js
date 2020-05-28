@@ -4,6 +4,7 @@ import FilmCardComponent from "../components/film-card-template.js";
 import {RenderPosition, Mode, DEFAULT_SMILE, Key, SHAKE_ANIMATION_TIMEOUT} from "../utils/const.js";
 import {render, remove, replace} from "../utils/render.js";
 import FilmCard from "../models/film-card.js";
+import Comment from "../models/comment.js";
 
 export default class MovieController {
   constructor(mainElement, filmCards, onDataChange, onViewChange) {
@@ -45,7 +46,9 @@ export default class MovieController {
     });
 
     this._filmDetailsComponent.setForm(() =>{
-      this._onDataChange(this, filmCard, null, this._filmDetailsComponent.getData());
+      let comment = this._filmDetailsComponent.getData();
+      comment = new Comment(comment.commentToRAW());
+      this._onDataChange(this, filmCard, null, comment.commentToSend());
       this.setBlockForm(true);
     });
 
@@ -70,7 +73,6 @@ export default class MovieController {
       this._currentCommentText = this._filmDetailsComponent.getData().commentText;
       let newFilmCard = FilmCard.clone(filmCard);
       newFilmCard.isWatchlist = !newFilmCard.isWatchlist;
-
       this._onDataChange(this, filmCard, newFilmCard);
     });
 
@@ -79,8 +81,7 @@ export default class MovieController {
 
       let newFilmCard = FilmCard.clone(filmCard);
       newFilmCard.isAlreadyWatched = !newFilmCard.isAlreadyWatched;
-      newFilmCard.watchingDate = !newFilmCard.isAlreadyWatched ? new Date() : null;
-
+      newFilmCard.watchingDate = newFilmCard.isAlreadyWatched ? new Date() : null;
       this._onDataChange(this, filmCard, newFilmCard);
     });
 
@@ -89,7 +90,6 @@ export default class MovieController {
 
       let newFilmCard = FilmCard.clone(filmCard);
       newFilmCard.isFavorite = !newFilmCard.isFavorite;
-
       this._onDataChange(this, filmCard, newFilmCard);
     });
 
@@ -99,7 +99,6 @@ export default class MovieController {
 
       let newFilmCard = FilmCard.clone(filmCard);
       newFilmCard.isWatchlist = !newFilmCard.isWatchlist;
-
       this._onDataChange(this, filmCard, newFilmCard);
     });
 
@@ -108,8 +107,7 @@ export default class MovieController {
 
       let newFilmCard = FilmCard.clone(filmCard);
       newFilmCard.isAlreadyWatched = !newFilmCard.isAlreadyWatched;
-      newFilmCard.watchingDate = !newFilmCard.isAlreadyWatched ? new Date() : null;
-
+      newFilmCard.watchingDate = newFilmCard.isAlreadyWatched ? new Date() : null;
       this._onDataChange(this, filmCard, newFilmCard);
     });
 
@@ -118,7 +116,6 @@ export default class MovieController {
 
       let newFilmCard = FilmCard.clone(filmCard);
       newFilmCard.isFavorite = !newFilmCard.isFavorite;
-
       this._onDataChange(this, filmCard, newFilmCard);
     });
 

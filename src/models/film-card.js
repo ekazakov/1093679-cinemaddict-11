@@ -61,7 +61,8 @@ export default class FilmCard {
   }
 
   static clone(data) {
-    let comments = data.comments.map((comment) => new Comment(comment.commentToRAW()));
+    // let comments = data.comments.map((comment) => new Comment(comment.commentToRAW()));
+    let comments = data.comments.map((comment) => new Comment(Comment.clone(comment)));
     let newFilmCard = new FilmCard(data.filmCardToRAW());
     newFilmCard.comments = comments;
     return newFilmCard;
