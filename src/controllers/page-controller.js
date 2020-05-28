@@ -96,18 +96,18 @@ export default class PageController {
     } else if (!newData && comment) {
       this._api.deleteCommentCard(comment._commentData.id)
       .then(() => {
-        this._api.updateFilmCard(oldData.id, oldData)
-        .then((filmCard) => {
-          return this._api.getFullFilmCard(filmCard, filmCard.id);
-        })
-        .then((filmCard) => {
-          this._filmCardsModel.removeComment(oldData, comment);
-          movieController.render(this._filmsListContainer, filmCard);
-        })
-        .catch(() => {
-          movieController.resetDeleteButton();
-          movieController.shakeComment();
-        });
+        return this._api.updateFilmCard(oldData.id, oldData);
+      })
+      .then((filmCard) => {
+        return this._api.getFullFilmCard(filmCard, filmCard.id);
+      })
+      .then((filmCard) => {
+        this._filmCardsModel.removeComment(oldData, comment);
+        movieController.render(this._filmsListContainer, filmCard);
+      })
+      .catch(() => {
+        movieController.resetDeleteButton();
+        movieController.shakeComment();
       });
 
     } else if (newData && oldData && !comment) {

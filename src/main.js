@@ -3,22 +3,16 @@ import FilterController from "./controllers/filter-controller.js";
 import FooterStatisticsComponent from "./components/footer-statistics-template.js";
 import PageController from "./controllers/page-controller.js";
 import {render} from "./utils/render.js";
-import {RenderPosition, MenuItem} from "./utils/const.js";
+import {RenderPosition, MenuItem, AUTHORIZATION, NO_FILMS, LOADING, LOADING_ERROR} from "./utils/const.js";
 import FilmCardsModel from "./models/film-cards.js";
 import StatisticController from "./controllers/statistic-controller.js";
-
 import API from "./api.js";
-const AUTHORIZATION = `Basic FGHN1ckBwYXNZDasfgjhk34`;
-
-const NO_FILMS = `<h2 class="films-list__title">There are no movies in our database</h2>`;
-const LOADING = `<h2 class="films-list__title">Loading...</h2>`;
 
 const headerElement = document.querySelector(`.header`);
 const mainElement = document.querySelector(`.main`);
 
 const api = new API(AUTHORIZATION);
 const filmCardsModel = new FilmCardsModel();
-
 
 const filterController = new FilterController(mainElement, filmCardsModel);
 filterController.render();
@@ -37,7 +31,7 @@ api.getFilmCards()
     fullFilmCards.push(fullFilmCard);
   });
 
-  Promise.all(fullFilmCards)
+  return Promise.all(fullFilmCards)
   .then(() => {
     loading.remove();
     filmCardsModel.setFilmCards(filmCards);
@@ -57,6 +51,10 @@ api.getFilmCards()
       mainElement.insertAdjacentHTML(RenderPosition.BEFOREEND, NO_FILMS);
     }
   });
+})
+.catch(() => {
+  loading.remove();
+  mainElement.insertAdjacentHTML(RenderPosition.BEFOREEND, LOADING_ERROR);
 });
 
 filterController.setOnchange((menuItem) => {

@@ -53,16 +53,6 @@ export default class FilmCards {
     return true;
   }
 
-  addComment(filmCard, comment) {
-    filmCard.commentsNumber += 1;
-
-    filmCard.comments.push(comment);
-
-    this._callHandlers(this._dataChangeHandlers);
-
-    return true;
-  }
-
   setFilterChangeHandler(handler) {
     this._filterChangeHandlers.push(handler);
   }

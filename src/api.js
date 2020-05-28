@@ -42,14 +42,11 @@ const API = class {
 
   addCommentCard(id, data) {
     const headers = new Headers();
-    // let comment = new Comment(data.commentToRAW());
-    // comment = comment.commentToSend();
     headers.append(`Authorization`, this._authorization);
     headers.append(`Content-type`, `application/json`);
 
     return fetch(`https://11.ecmascript.pages.academy/cinemaddict/comments/${id}`, {
       method: `POST`,
-      // body: JSON.stringify(comment),
       body: JSON.stringify(data),
       headers,
     })

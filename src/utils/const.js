@@ -12,6 +12,11 @@ export const ACTIVE_BTN_CLASS = `film-card__controls-item--active`;
 export const ACTIVE_LINK_FILTER = `main-navigation__item--active`;
 export const PREFIX_HREF = `http://localhost:8080/#`;
 
+export const AUTHORIZATION = `Basic FGHN1ckBwYXNZDasfgjhk34`;
+export const NO_FILMS = `<h2 class="films-list__title">There are no movies in our database</h2>`;
+export const LOADING = `<h2 class="films-list__title">Loading...</h2>`;
+export const LOADING_ERROR = `<h2 class="films-list__title">Loading error</h2>`;
+
 export const StatisticsMenu = {
   ALL_TIME: `statistic-all-time`,
   TODAY: `statistic-today`,

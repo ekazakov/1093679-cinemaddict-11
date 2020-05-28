@@ -199,7 +199,7 @@ export default class MovieController {
       this._filmDetailsComponent.removeAllHandlers();
     } else {
       this._filmDetailsComponent.getElement().querySelectorAll(`form input, form select, form textarea, form button, form label`)
-     .forEach((elem) => elem.setAttribute(`enabled`, `enabled`));
+     .forEach((elem) => elem.removeAttribute(`disabled`));
       this._filmDetailsComponent.recoveryAllHandlers();
     }
   }
