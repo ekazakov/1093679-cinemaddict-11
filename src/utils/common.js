@@ -3,20 +3,14 @@ import {VALUE_HOUR} from "./const.js";
 import moment from "moment";
 
 export const formatCommentDate = (dateObj) => {
-  /* const formatTime = (value) => {
-    return value < 10 ? `0${value}` : String(value);
-  };
-  return `${dateObj.getFullYear()}/${dateObj.getMonth() + 1}/${dateObj.getDate()} ${formatTime(dateObj.getHours())}:${formatTime(dateObj.getMinutes())}`;*/
   return `${moment(dateObj).fromNow()}`;
 };
 
 export const formatShortDateMovie = (dateObj) => {
-  // return `${dateObj.getFullYear()}`;
   return `${moment(dateObj).format(`yyyy`)}`;
 };
 
 export const formatFullDateMovie = (dateObj) => {
-  // return `${dateObj.getDate()} ${MONTH_NAMES[dateObj.getMonth()]} ${dateObj.getFullYear()}`;
   return `${moment(dateObj).format(`d MMMM yyyy`)}`;
 };
 
@@ -40,4 +34,15 @@ export const formatTimeLengthMovie = (value) => {
     return `${hours}h`;
   }
   return `${hours}h ${minutes}m`;
+};
+
+export const getFormatDescription = (description) => {
+  let a;
+  if (description.length >= 140) {
+    let arr = description.split(``);
+    a = arr.slice(0, 139).join(``) + `...`;
+  } else {
+    a = description;
+  }
+  return a;
 };

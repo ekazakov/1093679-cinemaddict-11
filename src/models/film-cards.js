@@ -19,7 +19,6 @@ export default class FilmCards {
   }
 
   setFilmCards(filmCards) {
-    // this._filmCards = Array.from(filmCards);
     this._filmCards = filmCards;
     this._callHandlers(this._dataChangeHandlers);
   }
@@ -35,6 +34,7 @@ export default class FilmCards {
     if (index === -1) {
       return false;
     }
+
     this._filmCards = [].concat(this._filmCards.slice(0, index), filmCard, this._filmCards.slice(index + 1));
     this._callHandlers(this._dataChangeHandlers);
     return true;
@@ -49,19 +49,7 @@ export default class FilmCards {
 
     filmCard.commentsNumber -= 1;
     filmCard.comments = [].concat(filmCard.comments.slice(0, index), filmCard.comments.slice(index + 1));
-
     this._callHandlers(this._dataChangeHandlers);
-
-    return true;
-  }
-
-  addComment(filmCard, comment) {
-    filmCard.commentsNumber += 1;
-
-    filmCard.comments.push(comment);
-
-    this._callHandlers(this._dataChangeHandlers);
-
     return true;
   }
 
@@ -76,6 +64,4 @@ export default class FilmCards {
   _callHandlers(handlers) {
     handlers.forEach((handler) => handler());
   }
-
-
 }

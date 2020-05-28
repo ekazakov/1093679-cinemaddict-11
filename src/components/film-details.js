@@ -1,6 +1,6 @@
 import {formatFullDateMovie} from "../utils/common.js";
 import {formatTimeLengthMovie} from "../utils/common.js";
-import {KEY} from "../utils/const.js";
+import {Key, DEFAULT_SMILE} from "../utils/const.js";
 import AbstractSmartComponent from "./abstract-smart-component.js";
 import {encode} from "he";
 import Comment from "../models/comment.js";
@@ -9,9 +9,9 @@ import Comment from "../models/comment.js";
 export const createFilmDetails = (filmCardData, templatePictureSmile, commentText) => {
   const formatGenre = (genreArr) => {
     let html = ``;
-    for (let i = 0; i < genreArr.length; i++) {
-      html += `<span class="film-details__genre">${genreArr[i]}</span>`;
-    }
+    genreArr.forEach((genreItem) => {
+      html += `<span class="film-details__genre">${genreItem}</span>`;
+    });
     return html;
   };
 
@@ -19,7 +19,7 @@ export const createFilmDetails = (filmCardData, templatePictureSmile, commentTex
     if (templatePictureSmile) {
       templatePictureSmile = templatePictureSmile;
     } else {
-      templatePictureSmile = `smile`;
+      templatePictureSmile = DEFAULT_SMILE;
     }
     return `<img src="images/emoji/${templatePictureSmile}.png" width="55" height="55" alt="emoji-${templatePictureSmile}">`;
   };
@@ -143,19 +143,11 @@ export const createFilmDetails = (filmCardData, templatePictureSmile, commentTex
 };
 
 const parseFromData = (formData, activeSmile) => {
-  const commenText = formData.get(`comment`);
-  /* return {
-    commentText: encode(commenText),
-    emoji: activeSmile ? activeSmile : `smile`,
-    commentDate: new Date(),
-    commentAutor: null
-  };*/
-
+  const commentText = encode(formData.get(`comment`));
   return new Comment({
-    // "author": null,
-    "comment": encode(commenText),
+    "comment": commentText,
     "date": new Date().toISOString(),
-    "emotion": activeSmile ? activeSmile : `smile`,
+    "emotion": activeSmile ? activeSmile : DEFAULT_SMILE,
   });
 };
 
@@ -163,12 +155,10 @@ export default class FilmDetails extends AbstractSmartComponent {
   constructor(filmCardData, currentSmile, commentText) {
     super();
     this._filmCardData = filmCardData;
-
     this._closeHandler = null;
-    this._submitHandlerForBtnOne = null;
-    this._submitHandlerForBtntwo = null;
-    this._submitHandlerForBtnthree = null;
-
+    this._watchlistHandlerBtn = null;
+    this._watchedHandlerBtn = null;
+    this._favoriteHandlerBtn = null;
     this._smileHandler = null;
     this._templatePictureSmile = currentSmile;
     this._currentCommentText = commentText;
@@ -176,6 +166,7 @@ export default class FilmDetails extends AbstractSmartComponent {
 
     this._submitHandler = null;
     this._setSubmitForm();
+    this.resetCommentError();
   }
 
   getTemplate() {
@@ -184,10 +175,9 @@ export default class FilmDetails extends AbstractSmartComponent {
 
   recoveryListeners() {
     this.setCloseFilmDetailsBtnHandler(this._closeHandler);
-
-    this.setBtnAddtoWatchlistHandler(this._submitHandlerForBtnOne);
-    this.setBtnMarkAsWatchedHandler(this._submitHandlerForBtntwo);
-    this.setBtnFavoriteHandler(this._submitHandlerForBtnthree);
+    this.setBtnAddtoWatchlistHandler(this._watchlistHandlerBtn);
+    this.setBtnMarkAsWatchedHandler(this._watchedHandlerBtn);
+    this.setBtnFavoriteHandler(this._favoriteHandlerBtn);
 
     this._subscribeOnEvents();
     this._setSubmitForm();
@@ -204,31 +194,43 @@ export default class FilmDetails extends AbstractSmartComponent {
   setCloseFilmDetailsBtnHandler(handler) {
     this.getElement().querySelector(`.film-details__close-btn`)
     .addEventListener(`click`, handler);
-
     this._closeHandler = handler;
   }
-
-
   setBtnAddtoWatchlistHandler(handler) {
     this.getElement().querySelector(`.film-details__control-label--watchlist`)
     .addEventListener(`click`, handler);
-
-    this._submitHandlerForBtnOne = handler;
+    this._watchlistHandlerBtn = handler;
   }
-
-
   setBtnMarkAsWatchedHandler(handler) {
     this.getElement().querySelector(`.film-details__control-label--watched`)
     .addEventListener(`click`, handler);
-
-    this._submitHandlerForBtntwo = handler;
+    this._watchedHandlerBtn = handler;
   }
-
   setBtnFavoriteHandler(handler) {
     this.getElement().querySelector(`.film-details__control-label--favorite`)
     .addEventListener(`click`, handler);
+    this._favoriteHandlerBtn = handler;
+  }
 
-    this._submitHandlerForBtnthree = handler;
+  removeAllHandlers() {
+    this.getElement().querySelector(`.film-details__control-label--watchlist`)
+    .removeEventListener(`click`, this._watchlistHandlerBtn);
+    this.getElement().querySelector(`.film-details__control-label--watched`)
+    .removeEventListener(`click`, this._watchedHandlerBtn);
+    this.getElement().querySelector(`.film-details__control-label--favorite`)
+    .removeEventListener(`click`, this._favoriteHandlerBtn);
+    this.getElement().querySelector(`.film-details__close-btn`)
+    .removeEventListener(`click`, this._closeHandler);
+  }
+  recoveryAllHandlers() {
+    this.getElement().querySelector(`.film-details__control-label--watchlist`)
+    .addEventListener(`click`, this._watchlistHandlerBtn);
+    this.getElement().querySelector(`.film-details__control-label--watched`)
+    .addEventListener(`click`, this._watchedHandlerBtn);
+    this.getElement().querySelector(`.film-details__control-label--favorite`)
+    .addEventListener(`click`, this._favoriteHandlerBtn);
+    this.getElement().querySelector(`.film-details__close-btn`)
+    .addEventListener(`click`, this._closeHandler);
   }
 
   _subscribeOnEvents() {
@@ -261,15 +263,13 @@ export default class FilmDetails extends AbstractSmartComponent {
   getData() {
     const form = this.getElement().querySelector(`.film-details__inner`);
     const formData = new FormData(form);
-
     return parseFromData(formData, this._templatePictureSmile);
-    // return new FormData(form);
   }
 
   _setSubmitForm() {
     this.getElement().querySelector(`form`)
     .addEventListener(`keydown`, (evt) => {
-      if (evt.ctrlKey && evt.key === KEY.ENTER) {
+      if (evt.ctrlKey && evt.key === Key.ENTER) {
         this._submitHandler();
       }
     });
@@ -279,5 +279,10 @@ export default class FilmDetails extends AbstractSmartComponent {
     this._submitHandler = handler;
   }
 
-
+  resetCommentError() {
+    this.getElement().querySelector(`.film-details__comment-input`)
+    .addEventListener(`click`, () => {
+      this.getElement().querySelector(`.film-details__comment-input`).style = ``;
+    });
+  }
 }

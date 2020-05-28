@@ -2,7 +2,7 @@ import {FilterType} from "../utils/const.js";
 import FilterComponent from "../components/filters.js";
 
 import {RenderPosition} from "../utils/const.js";
-import {render, /* remove,*/ replace} from "../utils/render.js";
+import {render, replace} from "../utils/render.js";
 import {getCardsByFilter} from "../utils/filter-cards.js";
 
 export default class FilterController {
@@ -41,12 +41,13 @@ export default class FilterController {
     } else {
       render(container, this._filterComponent, RenderPosition.BEFOREEND);
     }
-
   }
+
   _onFilterChange(filterType) {
     this._filmCardsModel.setFilter(filterType);
     this._activeFilterType = filterType;
   }
+
   _onDataChange() {
     this.render();
   }

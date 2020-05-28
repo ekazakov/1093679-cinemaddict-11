@@ -1,52 +1,43 @@
-/* import StatisticsComponent from "../components/statistic2.js";
+import StatisticsComponent from "../components/statistics-template.js";
 import {render, replace} from "../utils/render.js";
 import {RenderPosition} from "../utils/const.js";
 import {HIDDEN_CLASS} from "../utils/const.js";
-import {STATISTICS_MENU} from "../utils/const.js";
 
-const getWatchedMovies = (filmCards) => {
-  return filmCards.filter((filmCard) => filmCard.isAlreadyWatched);
-};
-
-const getOnPeriodCards = (filmCards, from, to) => {
-  let a = getWatchedMovies(filmCards);
-  let b = [];
-  a.forEach((filmCard) => {
-    if (filmCard.watchingDate <= to && filmCard.watchingDate >= from) {
-      b.push(filmCard);
-    }
-  });
-  return b;
-};
 
 export default class StatisticController {
   constructor(filmCardsModel, mainElement) {
     this._mainElement = mainElement;
-    this._filmCards = filmCardsModel.getFilmCardsAll();
-
+    this._filmCardsModel = filmCardsModel;
     this._statisticComponent = null;
-  }
 
+    this.actuallyCards = null;
+    this._onDataChange = this._onDataChange.bind(this);
+    this._filmCardsModel.setDataChangeHandler(this._onDataChange);
+  }
 
   render() {
-    this._statisticComponent = new StatisticsComponent(this._filmCards);
-    render(this._mainElement, this._statisticComponent, RenderPosition.BEFOREEND);
-    console.log(this._mainElement.querySelector(`.statistic__filters`));
-
-
-    this._statisticComponent.setPeriodStatistic(() => {
-
-    });
+    const oldComponent = this._statisticComponent;
+    if (oldComponent) {
+      this._statisticComponent = new StatisticsComponent(this.actuallyCards);
+      replace(this._statisticComponent, oldComponent);
+    } else {
+      this._statisticComponent = new StatisticsComponent(this._filmCardsModel.getFilmCardsAll());
+      render(this._mainElement, this._statisticComponent, RenderPosition.BEFOREEND);
+    }
   }
 
-
   hide() {
-    this._mainElement.classList.add(HIDDEN_CLASS);
+    this._statisticComponent.getElement().classList.add(HIDDEN_CLASS);
   }
 
   show() {
-    this._mainElement.classList.remove(HIDDEN_CLASS);
     this._statisticComponent.rerender();
+    this._statisticComponent.getElement().classList.remove(HIDDEN_CLASS);
   }
 
-}*/
+  _onDataChange() {
+    this.actuallyCards = this._filmCardsModel.getFilmCardsAll();
+    this.render();
+    this.hide();
+  }
+}
