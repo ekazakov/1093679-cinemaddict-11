@@ -7,7 +7,7 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 const renderChart = (statisticElement, filmCards) => {
 
-  let statisticCtx = statisticElement;
+  const statisticCtx = statisticElement;
   statisticCtx.height = BAR_HEIGHT * QUANTITY_BAR_HEIGHT;
 
   return new Chart(statisticCtx, {

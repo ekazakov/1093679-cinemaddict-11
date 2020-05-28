@@ -21,7 +21,7 @@ const pageController = new PageController(filmCardsModel, mainElement, api);
 const statisticController = new StatisticController(filmCardsModel, mainElement);
 
 mainElement.insertAdjacentHTML(RenderPosition.BEFOREEND, LOADING);
-let loading = mainElement.querySelector(`.films-list__title`);
+const loading = mainElement.querySelector(`.films-list__title`);
 
 api.getFilmCards()
 .then((filmCards) => {

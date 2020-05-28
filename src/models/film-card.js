@@ -26,7 +26,7 @@ export default class FilmCard {
   }
 
   getIdComments(comments) {
-    let commentsId = comments.map((comment) => comment.id);
+    const commentsId = comments.map((comment) => comment.id);
     return commentsId;
   }
 
@@ -61,9 +61,8 @@ export default class FilmCard {
   }
 
   static clone(data) {
-    // let comments = data.comments.map((comment) => new Comment(comment.commentToRAW()));
-    let comments = data.comments.map((comment) => new Comment(Comment.clone(comment)));
-    let newFilmCard = new FilmCard(data.filmCardToRAW());
+    const comments = data.comments.map((comment) => new Comment(Comment.clone(comment)));
+    const newFilmCard = new FilmCard(data.filmCardToRAW());
     newFilmCard.comments = comments;
     return newFilmCard;
   }

@@ -71,7 +71,7 @@ export default class MovieController {
 
     this._filmDetailsComponent.setBtnAddtoWatchlistHandler(() => {
       this._currentCommentText = this._filmDetailsComponent.getData().commentText;
-      let newFilmCard = FilmCard.clone(filmCard);
+      const newFilmCard = FilmCard.clone(filmCard);
       newFilmCard.isWatchlist = !newFilmCard.isWatchlist;
       this._onDataChange(this, filmCard, newFilmCard);
     });
@@ -79,7 +79,7 @@ export default class MovieController {
     this._filmDetailsComponent.setBtnMarkAsWatchedHandler(() => {
       this._currentCommentText = this._filmDetailsComponent.getData().commentText;
 
-      let newFilmCard = FilmCard.clone(filmCard);
+      const newFilmCard = FilmCard.clone(filmCard);
       newFilmCard.isAlreadyWatched = !newFilmCard.isAlreadyWatched;
       newFilmCard.watchingDate = newFilmCard.isAlreadyWatched ? new Date() : null;
       this._onDataChange(this, filmCard, newFilmCard);
@@ -88,7 +88,7 @@ export default class MovieController {
     this._filmDetailsComponent.setBtnFavoriteHandler(() => {
       this._currentCommentText = this._filmDetailsComponent.getData().commentText;
 
-      let newFilmCard = FilmCard.clone(filmCard);
+      const newFilmCard = FilmCard.clone(filmCard);
       newFilmCard.isFavorite = !newFilmCard.isFavorite;
       this._onDataChange(this, filmCard, newFilmCard);
     });
@@ -97,7 +97,7 @@ export default class MovieController {
     this._filmCardComponent.setBtnAddtoWatchlistHandler((evt) => {
       evt.preventDefault();
 
-      let newFilmCard = FilmCard.clone(filmCard);
+      const newFilmCard = FilmCard.clone(filmCard);
       newFilmCard.isWatchlist = !newFilmCard.isWatchlist;
       this._onDataChange(this, filmCard, newFilmCard);
     });
@@ -105,7 +105,7 @@ export default class MovieController {
     this._filmCardComponent.setBtnMarkAsWatchedHandler((evt) => {
       evt.preventDefault();
 
-      let newFilmCard = FilmCard.clone(filmCard);
+      const newFilmCard = FilmCard.clone(filmCard);
       newFilmCard.isAlreadyWatched = !newFilmCard.isAlreadyWatched;
       newFilmCard.watchingDate = newFilmCard.isAlreadyWatched ? new Date() : null;
       this._onDataChange(this, filmCard, newFilmCard);
@@ -114,7 +114,7 @@ export default class MovieController {
     this._filmCardComponent.setBtnFavoriteHandler((evt) => {
       evt.preventDefault();
 
-      let newFilmCard = FilmCard.clone(filmCard);
+      const newFilmCard = FilmCard.clone(filmCard);
       newFilmCard.isFavorite = !newFilmCard.isFavorite;
       this._onDataChange(this, filmCard, newFilmCard);
     });
@@ -152,7 +152,7 @@ export default class MovieController {
 
   _renderComments(filmCard) {
     filmCard.comments.forEach((comment) => {
-      let commentComponent = new CommentComponent(comment);
+      const commentComponent = new CommentComponent(comment);
       commentComponent.setDeleteHandler(() => {
         this.commentComponent = commentComponent;
         this._onDataChange(this, filmCard, null, commentComponent);

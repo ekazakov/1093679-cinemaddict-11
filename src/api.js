@@ -53,7 +53,7 @@ const API = class {
       .then(checkStatus)
       .then((response) => response.json())
       .then((response) => {
-        let filmCard = FilmCard.parseFilmCard(response.movie);
+        const filmCard = FilmCard.parseFilmCard(response.movie);
         filmCard.comments = Comment.parseComments(response.comments);
         return filmCard;
       });

@@ -49,7 +49,7 @@ export default class Filter extends AbstractSmartComponent {
     this.getElement().querySelector(`.main-navigation__items`)
     .addEventListener(`click`, (evt) => {
       if (evt.target.tagName === `A`) {
-        let filterName = evt.target.href.substring(PREFIX_HREF.length);
+        const filterName = evt.target.href.substring(PREFIX_HREF.length);
         this._activeFilter = filterName;
         handler(filterName);
         this.rerender();
@@ -69,7 +69,7 @@ export default class Filter extends AbstractSmartComponent {
     this.getElement()
     .addEventListener(`click`, (evt) => {
       if (evt.target.tagName === `A`) {
-        let menuItem = evt.target.href.substring(PREFIX_HREF.length);
+        const menuItem = evt.target.href.substring(PREFIX_HREF.length);
         handler(menuItem);
       }
     });
