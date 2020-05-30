@@ -4,12 +4,9 @@ import {DeletingBtnText} from "../utils/const.js";
 
 export const createComentTemplate = (commentData, buttonData) => {
   const formatEmoji = () => {
-    if (commentData.emoji) {
-      return `<img src="./images/emoji/${commentData.emoji}.png" width="55" height="55" alt="emoji-${commentData.emoji}">`;
-    } else {
-      return `<div for="add-emoji" class="film-details__add-emoji-label"></div>`;
-    }
+    return `<img src="./images/emoji/${commentData.emoji}.png" width="55" height="55" alt="emoji-${commentData.emoji}">`;
   };
+
   return (
     `<li class="film-details__comment">
       <span class="film-details__comment-emoji">
@@ -30,14 +27,20 @@ export const createComentTemplate = (commentData, buttonData) => {
 export default class Comment extends AbstractSmartComponent {
   constructor(commentData) {
     super();
-    this._commentData = commentData;
+    this.commentData = commentData;
     this.textDataButton = DeletingBtnText.DELETE;
     this.deleteHandler = null;
   }
 
   getTemplate() {
-    return createComentTemplate(this._commentData, this.textDataButton);
+    return createComentTemplate(this.commentData, this.textDataButton);
   }
+
+  setDeletingBtn() {
+    this.textDataButton = DeletingBtnText.DELETING;
+    this.rerender();
+  }
+
   remove() {
     super.removeElement();
   }
@@ -50,19 +53,24 @@ export default class Comment extends AbstractSmartComponent {
     super.rerender();
   }
 
+  resetDeleteButton() {
+    this.textDataButton = DeletingBtnText.DELETE;
+    this.rerender();
+  }
+
+  removeDeleteHandler() {
+    this.getElement().querySelector(`.film-details__comment-delete`)
+    .removeEventListener(`click`, this.deleteHandler);
+  }
+
+  recoveryDeleteHandler() {
+    this.getElement().querySelector(`.film-details__comment-delete`)
+    .addEventListener(`click`, this.deleteHandler);
+  }
 
   setDeleteHandler(handler) {
     this.deleteHandler = handler;
     this.getElement().querySelector(`.film-details__comment-delete`)
-    .addEventListener(`click`, () => {
-      this.textDataButton = DeletingBtnText.DELETING;
-      this.deleteHandler();
-      this.rerender();
-    });
-  }
-
-  resetDeleteButton() {
-    this.textDataButton = DeletingBtnText.DELETE;
-    this.rerender();
+    .addEventListener(`click`, this.deleteHandler);
   }
 }

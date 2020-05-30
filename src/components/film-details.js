@@ -16,9 +16,7 @@ export const createFilmDetails = (filmCardData, templatePictureSmile, commentTex
   };
 
   const formatSmile = () => {
-    if (templatePictureSmile) {
-      templatePictureSmile = templatePictureSmile;
-    } else {
+    if (!templatePictureSmile) {
       templatePictureSmile = DEFAULT_SMILE;
     }
     return `<img src="images/emoji/${templatePictureSmile}.png" width="55" height="55" alt="emoji-${templatePictureSmile}">`;
@@ -162,7 +160,7 @@ export default class FilmDetails extends AbstractSmartComponent {
     this._smileHandler = null;
     this._templatePictureSmile = currentSmile;
     this._currentCommentText = commentText;
-    this._subscribeOnEvents();
+    this._subscribeEvents();
 
     this._submitHandler = null;
     this._setSubmitForm();
@@ -173,22 +171,43 @@ export default class FilmDetails extends AbstractSmartComponent {
     return createFilmDetails(this._filmCardData, this._templatePictureSmile, this._currentCommentText);
   }
 
+  getCommentsList() {
+    return this.getElement().querySelector(`.film-details__comments-list`);
+  }
+
+  getData() {
+    const form = this.getElement().querySelector(`.film-details__inner`);
+    const formData = new FormData(form);
+    return parseFromData(formData, this._templatePictureSmile);
+  }
+
+  setChangeSmile(handler) {
+    this._smileHandler = handler;
+  }
+
+  setCurrentSmile(smile) {
+    this._templatePictureSmile = smile;
+  }
+
+  _setCurrentText(text) {
+    this._currentCommentText = text;
+  }
+
+  setForm(handler) {
+    this._submitHandler = handler;
+  }
+
   recoveryListeners() {
     this.setCloseFilmDetailsBtnHandler(this._closeHandler);
     this.setBtnAddtoWatchlistHandler(this._watchlistHandlerBtn);
     this.setBtnMarkAsWatchedHandler(this._watchedHandlerBtn);
     this.setBtnFavoriteHandler(this._favoriteHandlerBtn);
-
-    this._subscribeOnEvents();
+    this._subscribeEvents();
     this._setSubmitForm();
   }
 
   rerender() {
     super.rerender();
-  }
-
-  getCommentsList() {
-    return this.getElement().querySelector(`.film-details__comments-list`);
   }
 
   setCloseFilmDetailsBtnHandler(handler) {
@@ -233,7 +252,7 @@ export default class FilmDetails extends AbstractSmartComponent {
     .addEventListener(`click`, this._closeHandler);
   }
 
-  _subscribeOnEvents() {
+  _subscribeEvents() {
     this.getElement().querySelector(`.film-details__emoji-list`)
     .addEventListener(`click`, (evt) => {
       if (evt.target.closest(`INPUT`)) {
@@ -247,25 +266,6 @@ export default class FilmDetails extends AbstractSmartComponent {
     });
   }
 
-  setChangeSmile(handler) {
-    this._smileHandler = handler;
-  }
-
-  setCurrentSmile(smile) {
-    this._templatePictureSmile = smile;
-  }
-
-  _setCurrentText(text) {
-    this._currentCommentText = text;
-    this.getElement().querySelector(`.film-details__comment-input`).value = `${text}`;
-  }
-
-  getData() {
-    const form = this.getElement().querySelector(`.film-details__inner`);
-    const formData = new FormData(form);
-    return parseFromData(formData, this._templatePictureSmile);
-  }
-
   _setSubmitForm() {
     this.getElement().querySelector(`form`)
     .addEventListener(`keydown`, (evt) => {
@@ -273,10 +273,6 @@ export default class FilmDetails extends AbstractSmartComponent {
         this._submitHandler();
       }
     });
-  }
-
-  setForm(handler) {
-    this._submitHandler = handler;
   }
 
   resetCommentError() {

@@ -1,8 +1,9 @@
 import FilmCard from "./models/film-card.js";
 import Comment from "./models/comment.js";
+import {CODE_RESPONSE} from "./utils/const.js";
 
 const checkStatus = (response) => {
-  if (response.status >= 200 && response.status < 300) {
+  if (response.status >= CODE_RESPONSE.MIN && response.status < CODE_RESPONSE.MAX) {
     return response;
   } else {
     throw new Error(`${response.status}: ${response.statusText}`);
@@ -10,7 +11,7 @@ const checkStatus = (response) => {
 };
 
 
-const API = class {
+export default class Api {
   constructor(authorization) {
     this._authorization = authorization;
   }
@@ -85,6 +86,4 @@ const API = class {
       .then((response) => response.json())
       .then(FilmCard.parseFilmCard);
   }
-};
-
-export default API;
+}

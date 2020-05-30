@@ -1,15 +1,15 @@
 import {FilterType} from "./const.js";
 
 
-export const getOnWatchListFilmCards = (filmCards) => {
+export const getWatchListFilmCards = (filmCards) => {
   return filmCards.filter((filmCard) => filmCard.isWatchlist);
 };
 
-export const getOnHistoryFilmCards = (filmCards) => {
+export const getHistoryFilmCards = (filmCards) => {
   return filmCards.filter((filmCard) => filmCard.isAlreadyWatched);
 };
 
-export const getOnFavoritesFilmCards = (filmCards) => {
+export const getFavoritesFilmCards = (filmCards) => {
   return filmCards.filter((filmCard) => filmCard.isFavorite);
 };
 
@@ -19,11 +19,11 @@ export const getCardsByFilter = (filmCards, filterType) => {
     case FilterType.ALL:
       return filmCards;
     case FilterType.WATCHLIST:
-      return getOnWatchListFilmCards(filmCards);
+      return getWatchListFilmCards(filmCards);
     case FilterType.HISTORY:
-      return getOnHistoryFilmCards(filmCards);
+      return getHistoryFilmCards(filmCards);
     case FilterType.FAVORITES:
-      return getOnFavoritesFilmCards(filmCards);
+      return getFavoritesFilmCards(filmCards);
   }
   return filmCards;
 };

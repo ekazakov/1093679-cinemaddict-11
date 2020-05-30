@@ -7,19 +7,47 @@ import FilmCard from "../models/film-card.js";
 import Comment from "../models/comment.js";
 
 export default class MovieController {
-  constructor(mainElement, filmCards, onDataChange, onViewChange) {
+  constructor(mainElement, filmCards, dataChange, viewChange) {
     this._mainElement = mainElement;
     this._filmCards = filmCards;
-    this._onDataChange = onDataChange;
-    this._onViewChange = onViewChange;
+    this._dataChange = dataChange;
+    this._viewChange = viewChange;
     this._filmCardComponent = null;
     this._filmDetailsComponent = null;
     this._mode = Mode.DEFAULT;
-    this._onEscKeyDown = this._onEscKeyDown.bind(this);
+    this._escKeyDown = this._escKeyDown.bind(this);
 
     this._currentSmile = DEFAULT_SMILE;
     this._currentCommentText = ``;
     this.commentComponent = null;
+  }
+
+  setErrorComment() {
+    this._filmDetailsComponent.getElement().querySelector(`textarea`).style = `border: 3px solid red;`;
+  }
+
+  setDefaultView() {
+    if (this._mode === Mode.EDIT) {
+      remove(this._filmDetailsComponent);
+      this._mode = Mode.DEFAULT;
+
+      this._currentSmile = DEFAULT_SMILE;
+      this._filmDetailsComponent.setCurrentSmile(this._currentSmile);
+    }
+  }
+
+  setBlockForm(value) {
+    if (value) {
+      this._filmDetailsComponent.getElement().querySelectorAll(`form input, form select, form textarea, form button, form label`)
+     .forEach((elem) => elem.setAttribute(`disabled`, `disabled`));
+      this._filmDetailsComponent.removeAllHandlers();
+      this.commentComponent.removeDeleteHandler();
+    } else {
+      this._filmDetailsComponent.getElement().querySelectorAll(`form input, form select, form textarea, form button, form label`)
+     .forEach((elem) => elem.removeAttribute(`disabled`));
+      this._filmDetailsComponent.recoveryAllHandlers();
+      this.commentComponent.recoveryDeleteHandler();
+    }
   }
 
   render(place, filmCard) {
@@ -29,7 +57,6 @@ export default class MovieController {
     this._filmCardComponent = new FilmCardComponent(filmCard);
     this._filmDetailsComponent = new FilmDetailsComponent(filmCard, this._currentSmile, this._currentCommentText);
 
-
     this._filmCardComponent.setFilmCardClickHandler((evt) => {
       if (evt.target.closest(`IMG`) || evt.target.closest(`A`) || evt.target.closest(`H3`)) {
         this._filmDetailsComponent.rerender();
@@ -38,17 +65,54 @@ export default class MovieController {
         if (this._mode === Mode.EDIT) {
           this._mode = Mode.DEFAULT;
         }
-        this._onViewChange();
+        this._viewChange();
         this._mode = Mode.EDIT;
         this._renderComments(filmCard);
-        document.addEventListener(`keydown`, this._onEscKeyDown);
+        document.addEventListener(`keydown`, this._escKeyDown);
       }
     });
 
+    this._addHandlersForComponent(filmCard);
+
+    if (filmCardComponent && filmDetailsComponent) {
+      replace(this._filmCardComponent, filmCardComponent);
+      replace(this._filmDetailsComponent, filmDetailsComponent);
+      this._renderComments(filmCard);
+
+    } else {
+      render(place, this._filmCardComponent, RenderPosition.BEFOREEND);
+    }
+  }
+
+  shake() {
+    this._filmDetailsComponent.getElement().style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
+    setTimeout(() => {
+      this._filmDetailsComponent.getElement().style.animation = ``;
+    }, SHAKE_ANIMATION_TIMEOUT);
+  }
+
+  resetDeleteButton() {
+    this.commentComponent.resetDeleteButton();
+  }
+
+  destroy() {
+    remove(this._filmCardComponent);
+    remove(this._filmDetailsComponent);
+    document.removeEventListener(`keydown`, this._onEscKeyDown);
+  }
+
+  shakeComment() {
+    this.commentComponent.getElement().style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
+    setTimeout(() => {
+      this.commentComponent.getElement().style.animation = ``;
+    }, SHAKE_ANIMATION_TIMEOUT);
+  }
+
+  _addHandlersForComponent(filmCard) {
     this._filmDetailsComponent.setForm(() =>{
       let comment = this._filmDetailsComponent.getData();
       comment = new Comment(comment.commentToRAW());
-      this._onDataChange(this, filmCard, null, comment.commentToSend());
+      this._dataChange(this, filmCard, null, comment.commentToSend());
       this.setBlockForm(true);
     });
 
@@ -57,7 +121,6 @@ export default class MovieController {
       this._currentSmile = smile;
       this._renderComments(filmCard);
     });
-
 
     this._filmDetailsComponent.setCloseFilmDetailsBtnHandler(() => {
       remove(this._filmDetailsComponent);
@@ -73,81 +136,46 @@ export default class MovieController {
       this._currentCommentText = this._filmDetailsComponent.getData().commentText;
       const newFilmCard = FilmCard.clone(filmCard);
       newFilmCard.isWatchlist = !newFilmCard.isWatchlist;
-      this._onDataChange(this, filmCard, newFilmCard);
+      this._dataChange(this, filmCard, newFilmCard);
     });
 
     this._filmDetailsComponent.setBtnMarkAsWatchedHandler(() => {
       this._currentCommentText = this._filmDetailsComponent.getData().commentText;
-
       const newFilmCard = FilmCard.clone(filmCard);
       newFilmCard.isAlreadyWatched = !newFilmCard.isAlreadyWatched;
       newFilmCard.watchingDate = newFilmCard.isAlreadyWatched ? new Date() : null;
-      this._onDataChange(this, filmCard, newFilmCard);
+      this._dataChange(this, filmCard, newFilmCard);
     });
 
     this._filmDetailsComponent.setBtnFavoriteHandler(() => {
       this._currentCommentText = this._filmDetailsComponent.getData().commentText;
-
       const newFilmCard = FilmCard.clone(filmCard);
       newFilmCard.isFavorite = !newFilmCard.isFavorite;
-      this._onDataChange(this, filmCard, newFilmCard);
+      this._dataChange(this, filmCard, newFilmCard);
     });
 
 
     this._filmCardComponent.setBtnAddtoWatchlistHandler((evt) => {
       evt.preventDefault();
-
       const newFilmCard = FilmCard.clone(filmCard);
       newFilmCard.isWatchlist = !newFilmCard.isWatchlist;
-      this._onDataChange(this, filmCard, newFilmCard);
+      this._dataChange(this, filmCard, newFilmCard);
     });
 
     this._filmCardComponent.setBtnMarkAsWatchedHandler((evt) => {
       evt.preventDefault();
-
       const newFilmCard = FilmCard.clone(filmCard);
       newFilmCard.isAlreadyWatched = !newFilmCard.isAlreadyWatched;
       newFilmCard.watchingDate = newFilmCard.isAlreadyWatched ? new Date() : null;
-      this._onDataChange(this, filmCard, newFilmCard);
+      this._dataChange(this, filmCard, newFilmCard);
     });
 
     this._filmCardComponent.setBtnFavoriteHandler((evt) => {
       evt.preventDefault();
-
       const newFilmCard = FilmCard.clone(filmCard);
       newFilmCard.isFavorite = !newFilmCard.isFavorite;
-      this._onDataChange(this, filmCard, newFilmCard);
+      this._dataChange(this, filmCard, newFilmCard);
     });
-
-    if (filmCardComponent && filmDetailsComponent) {
-      replace(this._filmCardComponent, filmCardComponent);
-      replace(this._filmDetailsComponent, filmDetailsComponent);
-      this._renderComments(filmCard);
-
-    } else {
-      render(place, this._filmCardComponent, RenderPosition.BEFOREEND);
-    }
-  }
-
-  setDefaultView() {
-    if (this._mode === Mode.EDIT) {
-      remove(this._filmDetailsComponent);
-      this._mode = Mode.DEFAULT;
-
-      this._currentSmile = DEFAULT_SMILE;
-      this._filmDetailsComponent.setCurrentSmile(this._currentSmile);
-    }
-  }
-
-  resetDeleteButton() {
-    this.commentComponent.resetDeleteButton();
-  }
-
-  shakeComment() {
-    this.commentComponent.getElement().style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
-    setTimeout(() => {
-      this.commentComponent.getElement().style.animation = ``;
-    }, SHAKE_ANIMATION_TIMEOUT);
   }
 
   _renderComments(filmCard) {
@@ -155,20 +183,16 @@ export default class MovieController {
       const commentComponent = new CommentComponent(comment);
       commentComponent.setDeleteHandler(() => {
         this.commentComponent = commentComponent;
-        this._onDataChange(this, filmCard, null, commentComponent);
+        this._dataChange(this, filmCard, null, commentComponent);
+        commentComponent.setDeletingBtn();
+        this.setBlockForm(true);
       });
 
       render(this._filmDetailsComponent.getCommentsList(), commentComponent, RenderPosition.BEFOREEND);
     });
   }
 
-  destroy() {
-    remove(this._filmCardComponent);
-    remove(this._filmDetailsComponent);
-    document.removeEventListener(`keydown`, this._onEscKeyDown);
-  }
-
-  _onEscKeyDown(evt) {
+  _escKeyDown(evt) {
     const isEscKey = evt.key === Key.ESC;
 
     if (isEscKey) {
@@ -178,29 +202,6 @@ export default class MovieController {
       this._currentCommentText = ``;
       this._filmDetailsComponent.setCurrentSmile(this._currentSmile);
       document.removeEventListener(`keydown`, this._onEscKeyDown);
-    }
-  }
-
-  shake() {
-    this._filmDetailsComponent.getElement().style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
-    setTimeout(() => {
-      this._filmDetailsComponent.getElement().style.animation = ``;
-    }, SHAKE_ANIMATION_TIMEOUT);
-  }
-
-  setErrorComment() {
-    this._filmDetailsComponent.getElement().querySelector(`textarea`).style = `border: 3px solid red;`;
-  }
-
-  setBlockForm(value) {
-    if (value) {
-      this._filmDetailsComponent.getElement().querySelectorAll(`form input, form select, form textarea, form button, form label`)
-     .forEach((elem) => elem.setAttribute(`disabled`, `disabled`));
-      this._filmDetailsComponent.removeAllHandlers();
-    } else {
-      this._filmDetailsComponent.getElement().querySelectorAll(`form input, form select, form textarea, form button, form label`)
-     .forEach((elem) => elem.removeAttribute(`disabled`));
-      this._filmDetailsComponent.recoveryAllHandlers();
     }
   }
 }

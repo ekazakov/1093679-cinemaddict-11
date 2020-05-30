@@ -27,7 +27,7 @@ export default class Filter extends AbstractSmartComponent {
     this._filters = filters;
     this._activeFilter = activeFilter;
     this._handler = null;
-    this.setOnchangeHandler = null;
+    this.setChangeHandler = null;
   }
 
   getTemplate() {
@@ -39,11 +39,11 @@ export default class Filter extends AbstractSmartComponent {
   }
 
   recoveryListeners() {
-    this.setClickOnFiltersHandler(this._handler);
-    this.setOnchange(this.setOnchangeHandler);
+    this.setClickFiltersHandler(this._handler);
+    this.setChange(this.setChangeHandler);
   }
 
-  setClickOnFiltersHandler(handler) {
+  setClickFiltersHandler(handler) {
     this._handler = handler;
 
     this.getElement().querySelector(`.main-navigation__items`)
@@ -64,8 +64,8 @@ export default class Filter extends AbstractSmartComponent {
     });
   }
 
-  setOnchange(handler) {
-    this.setOnchangeHandler = handler;
+  setChange(handler) {
+    this.setChangeHandler = handler;
     this.getElement()
     .addEventListener(`click`, (evt) => {
       if (evt.target.tagName === `A`) {

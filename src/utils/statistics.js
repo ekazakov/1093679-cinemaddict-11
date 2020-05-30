@@ -1,30 +1,30 @@
-import {RangMap, VALUE_HOUR, GenreMap} from "../utils/const.js";
+import {RangMap, RangMapWatchedMovies, VALUE_HOUR, GenreMap} from "../utils/const.js";
 
 export const getWatchedMovies = (filmCards) => {
   return filmCards.filter((filmCard) => filmCard.isAlreadyWatched);
 };
 
 export const getRangUser = (filmCards) => {
-  const a = getWatchedMovies(filmCards).length;
-  if (a <= 0) {
+  const watchedMovies = getWatchedMovies(filmCards).length;
+  if (watchedMovies <= RangMapWatchedMovies.NO_RANG) {
     return RangMap.NO_RANG;
   }
-  if (a <= 10) {
+  if (watchedMovies <= RangMapWatchedMovies.NOVICE) {
     return RangMap.NOVICE;
   }
-  if (a >= 10 && a <= 20) {
+  if (watchedMovies >= RangMapWatchedMovies.NOVICE && watchedMovies <= RangMapWatchedMovies.FAN) {
     return RangMap.FAN;
   }
-  if (a >= 21) {
+  if (watchedMovies >= RangMapWatchedMovies.MOVIE_BUFF) {
     return RangMap.MOVIE_BUFF;
   }
   return undefined;
 };
 
 export const getWatchedMoviesLength = (filmCards, option) => {
-  const a = getWatchedMovies(filmCards);
+  const watchedMovies = getWatchedMovies(filmCards);
   let value = 0;
-  a.forEach((filmCard) => {
+  watchedMovies.forEach((filmCard) => {
     value += filmCard.movieLength;
   });
 
@@ -49,16 +49,16 @@ export const getWatchedMoviesLength = (filmCards, option) => {
 };
 
 export const getGenreOnWatchedMovies = (filmCards, options) => {
-  const a = getWatchedMovies(filmCards);
-  const b = [];
-  a.forEach((filmCard) => {
+  const watchedMovies = getWatchedMovies(filmCards);
+  const genreWatchedMovies = [];
+  watchedMovies.forEach((filmCard) => {
     filmCard.genre.forEach((genre) => {
       if (genre === options) {
-        b.push(genre);
+        genreWatchedMovies.push(genre);
       }
     });
   });
-  return b;
+  return genreWatchedMovies;
 };
 
 export const getGenreData = (filmCards) => {
@@ -73,25 +73,25 @@ export const getGenreData = (filmCards) => {
 };
 
 export const getTopGenre = (filmCards) => {
-  const a = getGenreData(filmCards);
-  let b = 0;
-  let c = ``;
-  for (const key in a) {
-    if (b <= a[key]) {
-      b = a[key];
-      c = key;
+  const genreData = getGenreData(filmCards);
+  let temp = 0;
+  let maxValue = ``;
+  for (const key in genreData) {
+    if (temp <= genreData[key]) {
+      temp = genreData[key];
+      maxValue = key;
     }
   }
-  return GenreMap[c];
+  return GenreMap[maxValue];
 };
 
-export const getOnPeriodCards = (filmCards, from, to) => {
-  const a = getWatchedMovies(filmCards);
-  const b = [];
-  a.forEach((filmCard) => {
+export const getPeriodCards = (filmCards, from, to) => {
+  const watchedMovies = getWatchedMovies(filmCards);
+  const periodCards = [];
+  watchedMovies.forEach((filmCard) => {
     if (filmCard.watchingDate <= to && filmCard.watchingDate >= from) {
-      b.push(filmCard);
+      periodCards.push(filmCard);
     }
   });
-  return b;
+  return periodCards;
 };
