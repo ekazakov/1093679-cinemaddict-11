@@ -41,7 +41,7 @@ export default class FilmCards {
   }
 
   removeComment(filmCard, removableComment) {
-    const index = filmCard.comments.findIndex((it) => it.id === removableComment._commentData.id);
+    const index = filmCard.comments.findIndex((it) => it.id === removableComment.getId());
 
     if (index === -1) {
       return false;

@@ -6,12 +6,12 @@ import {render} from "./utils/render.js";
 import {RenderPosition, MenuItem, AUTHORIZATION, NO_FILMS, LOADING, LOADING_ERROR} from "./utils/const.js";
 import FilmCardsModel from "./models/film-cards.js";
 import StatisticController from "./controllers/statistic-controller.js";
-import API from "./api.js";
+import Api from "./api.js";
 
 const headerElement = document.querySelector(`.header`);
 const mainElement = document.querySelector(`.main`);
 
-const api = new API(AUTHORIZATION);
+const api = new Api(AUTHORIZATION);
 const filmCardsModel = new FilmCardsModel();
 
 const filterController = new FilterController(mainElement, filmCardsModel);
@@ -57,7 +57,7 @@ api.getFilmCards()
   mainElement.insertAdjacentHTML(RenderPosition.BEFOREEND, LOADING_ERROR);
 });
 
-filterController.setOnchange((menuItem) => {
+filterController.setChange((menuItem) => {
   switch (menuItem) {
     case MenuItem.ALL:
       statisticController.hide();

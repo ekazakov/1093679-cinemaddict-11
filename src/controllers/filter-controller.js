@@ -13,12 +13,12 @@ export default class FilterController {
     this._activeFilterType = FilterType.ALL;
     this._filterComponent = null;
 
-    this._onDataChange = this._onDataChange.bind(this);
-    this._onFilterChange = this._onFilterChange.bind(this);
+    this._dataChangeHandler = this._dataChangeHandler.bind(this);
+    this._filterChangeHandler = this._filterChangeHandler.bind(this);
 
-    this._filmCardsModel.setDataChangeHandler(this._onDataChange);
+    this._filmCardsModel.setDataChangeHandler(this._dataChangeHandler);
 
-    this._setOnChangeFilterHandler = null;
+    this._setChangeFilterHandler = null;
   }
 
   render() {
@@ -34,26 +34,26 @@ export default class FilterController {
 
     const oldComponent = this._filterComponent;
     this._filterComponent = new FilterComponent(filters, this._activeFilterType);
-    this._filterComponent.setClickOnFiltersHandler(this._onFilterChange);
+    this._filterComponent.setClickFiltersHandler(this._filterChangeHandler);
     if (oldComponent) {
       replace(this._filterComponent, oldComponent);
-      this._filterComponent.setOnchange(this._setOnChangeFilterHandler);
+      this._filterComponent.setChange(this._setChangeFilterHandler);
     } else {
       render(container, this._filterComponent, RenderPosition.BEFOREEND);
     }
   }
 
-  _onFilterChange(filterType) {
+  setChange(handler) {
+    this._setChangeFilterHandler = handler;
+    this._filterComponent.setChange(this._setChangeFilterHandler);
+  }
+
+  _filterChangeHandler(filterType) {
     this._filmCardsModel.setFilter(filterType);
     this._activeFilterType = filterType;
   }
 
-  _onDataChange() {
+  _dataChangeHandler() {
     this.render();
-  }
-
-  setOnchange(handler) {
-    this._setOnChangeFilterHandler = handler;
-    this._filterComponent.setOnchange(this._setOnChangeFilterHandler);
   }
 }

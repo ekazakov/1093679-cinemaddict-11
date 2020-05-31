@@ -17,6 +17,38 @@ export const NO_FILMS = `<h2 class="films-list__title">There are no movies in ou
 export const LOADING = `<h2 class="films-list__title">Loading...</h2>`;
 export const LOADING_ERROR = `<h2 class="films-list__title">Loading error</h2>`;
 
+export const CHART_OPTIONS = {
+  SIZE: 20,
+  OFFSET: 40,
+  PADDING: 100,
+  FONTSIZE: 20,
+  BARTHICKNESS: 24
+};
+
+export const PERIOD_MAP = {
+  TODAY: 1,
+  WEEK: 7,
+  MONTH: 30,
+  YEAR: 365
+};
+
+export const LENGTH_DESCRIPTION = {
+  ACCEPTABLE: 139,
+  UNACCEPTABLE: 140
+};
+
+export const RangMapWatchedMovies = {
+  NO_RANG: 0,
+  NOVICE: 10,
+  FAN: 20,
+  MOVIE_BUFF: 21
+};
+
+export const CODE_RESPONSE = {
+  MIN: 200,
+  MAX: 300
+};
+
 export const StatisticsMenu = {
   ALL_TIME: `statistic-all-time`,
   TODAY: `statistic-today`,

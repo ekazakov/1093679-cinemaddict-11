@@ -1,6 +1,6 @@
 import AbstractSmartComponent from "./abstract-smart-component.js";
-import {StatisticsMenu, BAR_HEIGHT, QUANTITY_BAR_HEIGHT} from "../utils/const.js";
-import {getWatchedMovies, getRangUser, getWatchedMoviesLength, getGenreData, getTopGenre, getOnPeriodCards} from "../utils/statistics.js";
+import {StatisticsMenu, BAR_HEIGHT, QUANTITY_BAR_HEIGHT, PERIOD_MAP, CHART_OPTIONS} from "../utils/const.js";
+import {getWatchedMovies, getRangUser, getWatchedMoviesLength, getGenreData, getTopGenre, getPeriodCards} from "../utils/statistics.js";
 
 import Chart from "chart.js";
 import ChartDataLabels from 'chartjs-plugin-datalabels';
@@ -26,26 +26,26 @@ const renderChart = (statisticElement, filmCards) => {
       plugins: {
         datalabels: {
           font: {
-            size: 20
+            size: CHART_OPTIONS.SIZE
           },
           color: `#ffffff`,
           anchor: `start`,
           align: `start`,
-          offset: 40,
+          offset: CHART_OPTIONS.OFFSET,
         }
       },
       scales: {
         yAxes: [{
           ticks: {
             fontColor: `#ffffff`,
-            padding: 100,
-            fontSize: 20
+            padding: CHART_OPTIONS.PADDING,
+            fontSize: CHART_OPTIONS.FONTSIZE
           },
           gridLines: {
             display: false,
             drawBorder: false
           },
-          barThickness: 24
+          barThickness: CHART_OPTIONS.BARTHICKNESS
         }],
         xAxes: [{
           ticks: {
@@ -124,7 +124,7 @@ export default class Statistics extends AbstractSmartComponent {
     this._filmCards = filmCards;
     this._actuallyCards = this._filmCards.slice(0, this._filmCards.length);
 
-    this.setPeriodStatistic();
+    this._setPeriodStatistic();
 
     this._chart = null;
 
@@ -132,17 +132,22 @@ export default class Statistics extends AbstractSmartComponent {
 
     this._nowDate = new Date();
     this._yesterday = new Date();
-    this._yesterday.setDate(this._nowDate.getDate() - 1);
+    this._yesterday.setDate(this._nowDate.getDate() - PERIOD_MAP.TODAY);
     this._sevenDaysDate = new Date();
-    this._sevenDaysDate.setDate(this._nowDate.getDate() - 7);
+    this._sevenDaysDate.setDate(this._nowDate.getDate() - PERIOD_MAP.WEEK);
     this._thirtyDaysDate = new Date();
-    this._thirtyDaysDate.setDate(this._nowDate.getDate() - 30);
+    this._thirtyDaysDate.setDate(this._nowDate.getDate() - PERIOD_MAP.MONTH);
     this._yearDate = new Date();
-    this._yearDate.setDate(this._nowDate.getDate() - 365);
+    this._yearDate.setDate(this._nowDate.getDate() - PERIOD_MAP.YEAR);
   }
 
   getTemplate() {
     return createStatisticsTemplate(this._actuallyCards, this._filmCards);
+  }
+
+  rerender(filmCards = this._filmCards) {
+    this._actuallyCards = filmCards;
+    super.rerender();
   }
 
   hide() {
@@ -154,13 +159,8 @@ export default class Statistics extends AbstractSmartComponent {
     this.rerender();
   }
 
-  rerender(filmCards = this._filmCards) {
-    this._actuallyCards = filmCards;
-    super.rerender();
-  }
-
   recoveryListeners() {
-    this.setPeriodStatistic();
+    this._setPeriodStatistic();
     this._renderCharts();
   }
 
@@ -178,7 +178,7 @@ export default class Statistics extends AbstractSmartComponent {
     }
   }
 
-  setPeriodStatistic() {
+  _setPeriodStatistic() {
     const actuallyStatistic = {
       [StatisticsMenu.ALL_TIME]: 0,
       [StatisticsMenu.TODAY]: this._yesterday,
@@ -192,16 +192,16 @@ export default class Statistics extends AbstractSmartComponent {
       if (evt.target.closest(`INPUT`)) {
         const statisticElement = this.getElement().querySelector(`.statistic__chart`);
 
-        this._actuallyCards = getOnPeriodCards(this._filmCards, actuallyStatistic[evt.target.id], this._nowDate);
+        this._actuallyCards = getPeriodCards(this._filmCards, actuallyStatistic[evt.target.id], this._nowDate);
 
         if (!this._actuallyCards.length) {
           this.rerender([]);
           this._resetCharts();
-          document.getElementById(`${evt.target.id}`).checked = true;
+          document.querySelector(`#${evt.target.id}`).checked = true;
         } else {
           this._resetCharts();
           this.rerender(this._actuallyCards);
-          document.getElementById(`${evt.target.id}`).checked = true;
+          document.querySelector(`#${evt.target.id}`).checked = true;
           this._chart = renderChart(statisticElement, this._actuallyCards);
         }
       }

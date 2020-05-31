@@ -1,4 +1,4 @@
-import {VALUE_HOUR} from "./const.js";
+import {VALUE_HOUR, LENGTH_DESCRIPTION} from "./const.js";
 
 import moment from "moment";
 
@@ -37,12 +37,8 @@ export const formatTimeLengthMovie = (value) => {
 };
 
 export const getFormatDescription = (description) => {
-  let a;
-  if (description.length >= 140) {
-    const arr = description.split(``);
-    a = arr.slice(0, 139).join(``) + `...`;
-  } else {
-    a = description;
+  if (description.length >= LENGTH_DESCRIPTION.UNACCEPTABLE) {
+    return description.split(``).slice(0, LENGTH_DESCRIPTION.ACCEPTABLE).join(``) + `...`;
   }
-  return a;
+  return description;
 };
