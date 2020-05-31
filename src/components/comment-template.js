@@ -39,6 +39,9 @@ export default class Comment extends AbstractSmartComponent {
   setDeletingBtn() {
     this.textDataButton = DeletingBtnText.DELETING;
     this.rerender();
+    this.getElement()
+     .querySelector(`.film-details__comment-delete`)
+     .setAttribute(`disabled`, `disabled`);
   }
 
   remove() {
@@ -62,9 +65,8 @@ export default class Comment extends AbstractSmartComponent {
     this.rerender();
     this.getElement()
      .querySelector(`.film-details__comment-delete`)
-     .setAttribute(`disabled`, `disabled`);
+     .removeAttribute(`disabled`);
   }
-
 
   setDeleteHandler(handler) {
     this.deleteHandler = handler;
