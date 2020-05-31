@@ -11,8 +11,8 @@ export default class StatisticController {
     this._statisticComponent = null;
 
     this.actuallyCards = null;
-    this._dataChange = this._dataChange.bind(this);
-    this._filmCardsModel.setDataChangeHandler(this._dataChange);
+    this._dataChangeHandler = this._dataChangeHandler.bind(this);
+    this._filmCardsModel.setDataChangeHandler(this._dataChangeHandler);
   }
 
   render() {
@@ -35,7 +35,7 @@ export default class StatisticController {
     this._statisticComponent.getElement().classList.remove(HIDDEN_CLASS);
   }
 
-  _dataChange() {
+  _dataChangeHandler() {
     this.actuallyCards = this._filmCardsModel.getFilmCardsAll();
     this.render();
     this.hide();

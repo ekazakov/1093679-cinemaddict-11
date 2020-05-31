@@ -37,12 +37,8 @@ export const formatTimeLengthMovie = (value) => {
 };
 
 export const getFormatDescription = (description) => {
-  let a;
   if (description.length >= LENGTH_DESCRIPTION.UNACCEPTABLE) {
-    const arr = description.split(``);
-    a = arr.slice(0, LENGTH_DESCRIPTION.ACCEPTABLE).join(``) + `...`;
-  } else {
-    a = description;
+    return description.split(``).slice(0, LENGTH_DESCRIPTION.ACCEPTABLE).join(``) + `...`;
   }
-  return a;
+  return description;
 };

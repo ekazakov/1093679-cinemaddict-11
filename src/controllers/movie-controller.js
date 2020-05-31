@@ -7,11 +7,11 @@ import FilmCard from "../models/film-card.js";
 import Comment from "../models/comment.js";
 
 export default class MovieController {
-  constructor(mainElement, filmCards, dataChange, viewChange) {
+  constructor(mainElement, filmCards, dataChangeHandler, viewChangeHandler) {
     this._mainElement = mainElement;
     this._filmCards = filmCards;
-    this._dataChange = dataChange;
-    this._viewChange = viewChange;
+    this._dataChangeHandler = dataChangeHandler;
+    this._viewChangeHandler = viewChangeHandler;
     this._filmCardComponent = null;
     this._filmDetailsComponent = null;
     this._mode = Mode.DEFAULT;
@@ -41,12 +41,10 @@ export default class MovieController {
       this._filmDetailsComponent.getElement().querySelectorAll(`form input, form select, form textarea, form button, form label`)
      .forEach((elem) => elem.setAttribute(`disabled`, `disabled`));
       this._filmDetailsComponent.removeAllHandlers();
-      this.commentComponent.removeDeleteHandler();
     } else {
       this._filmDetailsComponent.getElement().querySelectorAll(`form input, form select, form textarea, form button, form label`)
      .forEach((elem) => elem.removeAttribute(`disabled`));
       this._filmDetailsComponent.recoveryAllHandlers();
-      this.commentComponent.recoveryDeleteHandler();
     }
   }
 
@@ -65,7 +63,7 @@ export default class MovieController {
         if (this._mode === Mode.EDIT) {
           this._mode = Mode.DEFAULT;
         }
-        this._viewChange();
+        this._viewChangeHandler();
         this._mode = Mode.EDIT;
         this._renderComments(filmCard);
         document.addEventListener(`keydown`, this._escKeyDown);
@@ -112,7 +110,7 @@ export default class MovieController {
     this._filmDetailsComponent.setForm(() =>{
       let comment = this._filmDetailsComponent.getData();
       comment = new Comment(comment.commentToRAW());
-      this._dataChange(this, filmCard, null, comment.commentToSend());
+      this._dataChangeHandler(this, filmCard, null, comment.commentToSend());
       this.setBlockForm(true);
     });
 
@@ -128,7 +126,7 @@ export default class MovieController {
       this._mode = Mode.DEFAULT;
       this._currentSmile = DEFAULT_SMILE;
       this._currentCommentText = ``;
-      this._filmDetailsComponent._setCurrentText(``);
+      this._filmDetailsComponent.setCurrentText(``);
       this._filmDetailsComponent.setCurrentSmile(this._currentSmile);
     });
 
@@ -136,7 +134,7 @@ export default class MovieController {
       this._currentCommentText = this._filmDetailsComponent.getData().commentText;
       const newFilmCard = FilmCard.clone(filmCard);
       newFilmCard.isWatchlist = !newFilmCard.isWatchlist;
-      this._dataChange(this, filmCard, newFilmCard);
+      this._dataChangeHandler(this, filmCard, newFilmCard);
     });
 
     this._filmDetailsComponent.setBtnMarkAsWatchedHandler(() => {
@@ -144,14 +142,14 @@ export default class MovieController {
       const newFilmCard = FilmCard.clone(filmCard);
       newFilmCard.isAlreadyWatched = !newFilmCard.isAlreadyWatched;
       newFilmCard.watchingDate = newFilmCard.isAlreadyWatched ? new Date() : null;
-      this._dataChange(this, filmCard, newFilmCard);
+      this._dataChangeHandler(this, filmCard, newFilmCard);
     });
 
     this._filmDetailsComponent.setBtnFavoriteHandler(() => {
       this._currentCommentText = this._filmDetailsComponent.getData().commentText;
       const newFilmCard = FilmCard.clone(filmCard);
       newFilmCard.isFavorite = !newFilmCard.isFavorite;
-      this._dataChange(this, filmCard, newFilmCard);
+      this._dataChangeHandler(this, filmCard, newFilmCard);
     });
 
 
@@ -159,7 +157,7 @@ export default class MovieController {
       evt.preventDefault();
       const newFilmCard = FilmCard.clone(filmCard);
       newFilmCard.isWatchlist = !newFilmCard.isWatchlist;
-      this._dataChange(this, filmCard, newFilmCard);
+      this._dataChangeHandler(this, filmCard, newFilmCard);
     });
 
     this._filmCardComponent.setBtnMarkAsWatchedHandler((evt) => {
@@ -167,14 +165,14 @@ export default class MovieController {
       const newFilmCard = FilmCard.clone(filmCard);
       newFilmCard.isAlreadyWatched = !newFilmCard.isAlreadyWatched;
       newFilmCard.watchingDate = newFilmCard.isAlreadyWatched ? new Date() : null;
-      this._dataChange(this, filmCard, newFilmCard);
+      this._dataChangeHandler(this, filmCard, newFilmCard);
     });
 
     this._filmCardComponent.setBtnFavoriteHandler((evt) => {
       evt.preventDefault();
       const newFilmCard = FilmCard.clone(filmCard);
       newFilmCard.isFavorite = !newFilmCard.isFavorite;
-      this._dataChange(this, filmCard, newFilmCard);
+      this._dataChangeHandler(this, filmCard, newFilmCard);
     });
   }
 
@@ -183,9 +181,8 @@ export default class MovieController {
       const commentComponent = new CommentComponent(comment);
       commentComponent.setDeleteHandler(() => {
         this.commentComponent = commentComponent;
-        this._dataChange(this, filmCard, null, commentComponent);
         commentComponent.setDeletingBtn();
-        this.setBlockForm(true);
+        this._dataChangeHandler(this, filmCard, null, commentComponent);
       });
 
       render(this._filmDetailsComponent.getCommentsList(), commentComponent, RenderPosition.BEFOREEND);

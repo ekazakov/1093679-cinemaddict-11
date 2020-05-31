@@ -189,7 +189,7 @@ export default class FilmDetails extends AbstractSmartComponent {
     this._templatePictureSmile = smile;
   }
 
-  _setCurrentText(text) {
+  setCurrentText(text) {
     this._currentCommentText = text;
   }
 
@@ -261,7 +261,7 @@ export default class FilmDetails extends AbstractSmartComponent {
         this._currentCommentText = this.getData().commentText;
         this.rerender();
         this._smileHandler(this._templatePictureSmile);
-        this._setCurrentText(this._currentCommentText);
+        this.setCurrentText(this._currentCommentText);
       }
     });
   }

@@ -53,20 +53,18 @@ export default class Comment extends AbstractSmartComponent {
     super.rerender();
   }
 
+  getId() {
+    return this.commentData.id;
+  }
+
   resetDeleteButton() {
     this.textDataButton = DeletingBtnText.DELETE;
     this.rerender();
+    this.getElement()
+     .querySelector(`.film-details__comment-delete`)
+     .setAttribute(`disabled`, `disabled`);
   }
 
-  removeDeleteHandler() {
-    this.getElement().querySelector(`.film-details__comment-delete`)
-    .removeEventListener(`click`, this.deleteHandler);
-  }
-
-  recoveryDeleteHandler() {
-    this.getElement().querySelector(`.film-details__comment-delete`)
-    .addEventListener(`click`, this.deleteHandler);
-  }
 
   setDeleteHandler(handler) {
     this.deleteHandler = handler;
